@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Resume</title>
+    <link rel="stylesheet" href="css/edit.css">
+</head>
+<body>
+    <div id="head-icons">
+        <i id="save-icon" class="fa-solid fa-floppy-disk"></i>
+        <i id="download-icon" class="fa-solid fa-download"></i>
+        <i id="print-icon" class="fa-solid fa-print"></i>
+    </div>
+
+    <header>
+        <h1>Edit Your Resume</h1>
+    </header>
+
+    <main class="edit-main">
+        <div id="form-container" class="form-container-hidden">
+            <section class="form-section">
+                <form id="resume-form">
+<!--                    Section Title-->
+<!--                    <label for="section">Section Name:</label>-->
+<!--                    <input type="text" id="section" name="section">-->
+<!--                    <button type="button" id="update-section-name">Save</button>-->
+<!--                    <button type="button" id="cancel-section-name">Cancel</button>-->
+
+<!--                    INFO-->
+<!--                    <label for="name">Name:</label>-->
+<!--                    <input type="text" id="name" name="name">-->
+<!--                    <label for="phone">Phone:</label>-->
+<!--                    <input type="text" id="phone" name="phone">-->
+<!--                    <label for="email">Email:</label>-->
+<!--                    <input type="text" id="email" name="email">-->
+<!--                    <label for="location">Location:</label>-->
+<!--                    <input type="text" id="location" name="location">-->
+<!--                    <button type="button" id="update-info-entry">Save</button>-->
+<!--                    <button type="button" id="cancel-info-entry">Cancel</button>-->
+
+<!--                    EDU-->
+<!--                    <label for="university">University:</label>-->
+<!--                    <textarea id="university" name="university"></textarea>-->
+<!--                    <label for="graduation">(Expected) Graduation Year:</label>-->
+<!--                    <input type="date" id="graduation" name="graduation">-->
+<!--                    <label for="major">Major:</label>-->
+<!--                    <textarea id="major" name="major"></textarea>-->
+<!--                    <button type="button" id="add-edu-entry">Save</button>-->
+<!--                    <button type="button" id="cancel-edu-entry">Cancel</button>-->
+
+<!--                    SKILL-->
+<!--                    <label for="new-skill-name">Skill name:</label>-->
+<!--                    <textarea id="new-skill-name" name="new-skill-name"></textarea>-->
+<!--                    <label for="new-skill-detail">Skill details:</label>-->
+<!--                    <textarea id="new-skill-detail" name="new-skill-detail"></textarea>-->
+<!--                    <button type="button" id="add-skill-entry">Save</button>-->
+<!--                    <button type="button" id="cancel-skill-entry">Cancel</button>-->
+
+<!--                    EXP-->
+<!--                    <label for="company">Company:</label>-->
+<!--                    <input type="text" id="company" name="company">-->
+<!--                    <label for="title">Position Title:</label>-->
+<!--                    <input type="text" id="title" name="title">-->
+<!--                    <label for="org-address">Location:</label>-->
+<!--                    <textarea id="org-address" name="org-address"></textarea>-->
+<!--                    <label for="start">Start Date:</label>-->
+<!--                    <input type="date" id="start" name="start">-->
+<!--                    <label for="end">End Date:</label>-->
+<!--                    <input type="date" id="end" name="end">-->
+<!--                    <label for="exp">Experience:</label>-->
+<!--                    <textarea id="exp" name="exp" oninput="addBullet(this)"></textarea>-->
+<!--                    <button type="button" id="add-exp-entry">Save</button>-->
+<!--                    <button type="button" id="cancel-exp-entry">Cancel</button>-->
+                </form>
+            </section>
+        </div>
+
+        <div id="preview-container">
+            <section class="preview-section">
+            <div id="resume-preview" data-template="1">
+                <!-- The selected template with user data will appear here -->
+                <!-- Personal Info -->
+                <section class="info-section" data-type="info">
+                    <div>
+                        <div class="component">
+                            <ul>
+                                <li><strong>Michael Johnson2</strong></li>
+                                <li><p> Phone: (999)-123-4567 | Email: jo.mi@northeastern.edu | Location: Boston</p></li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Education Section -->
+                <section class="edu-section" data-type="edu">
+                    <h2><span>Education</span><i class="fa-regular fa-square-plus"></i><i class="fa-regular fa-square-minus"></i><i class="fa-solid fa-up-long"></i><i class="fa-solid fa-down-long"></i></h2>
+                    <div>
+                        <div class="component">
+                            <ul>
+                                <li><strong>Northeastern University</strong><span>Dec 2026</span></li>
+                                <li>MS in Software Engineering Systems</li>
+                            </ul>
+                            <i class="fa-solid fa-trash trash-icon-edu"></i>
+                        </div>
+                        <div class="component">
+                            <ul>
+                                <li><strong>Boston University</strong><span>Dec 2019</span></li>
+                                <li>MS in Software Engineering Systems</li>
+                            </ul>
+                            <i class="fa-solid fa-trash trash-icon-edu"></i>
+                        </div>
+                    </div>
+                    <div id="add-edu" class="add-button">+</div>
+                </section>
+
+                <!-- Personal Skills Section -->
+                <section class="skill-section" data-type="skill">
+                    <h2><span>Personal Skills</span><i class="fa-regular fa-square-plus"></i><i class="fa-regular fa-square-minus"></i><i class="fa-solid fa-up-long"></i><i class="fa-solid fa-down-long"></i></h2>
+                    <div>
+                        <div class="component">
+                            <ul>
+                                <li><strong>Communication language</strong>: <span>Chinese (Native), English (Proficient)</span></li>
+                            </ul>
+                            <i class="fa-solid fa-trash trash-icon-skill"></i>
+                        </div>
+                        <div class="component">
+                            <ul>
+                                <li><strong>Programming languages</strong>: <span>Python, SQL, HTML5, Java</span></li>
+                            </ul>
+                            <i class="fa-solid fa-trash trash-icon-skill"></i>
+                        </div>
+                        <div class="component">
+                            <ul>
+                                <li><strong>Certifications</strong>: <span>ITIL 4 Foundation; Microsoft Certified: Azure Database Administrator Associate; Microsoft Certified: Security, Compliance, and Identity Fundamentals</span></li>
+                            </ul>
+                            <i class="fa-solid fa-trash trash-icon-skill"></i>
+                        </div>
+                    </div>
+                    <div id="add-skill" class="add-button">+</div>
+                </section>
+
+                <!-- Professional Experience Section -->
+                <section class="exp-section" data-type="exp">
+                    <h2><span>Professional Experience</span><i class="fa-regular fa-square-plus"></i><i class="fa-regular fa-square-minus"></i><i class="fa-solid fa-up-long"></i><i class="fa-solid fa-down-long"></i></h2>
+                    <div>
+                        <div class="component">
+                            <ul>
+                                <li><strong>Wicresoft, Azure PaaS Support Engineer</strong></li>
+                                <li><strong><em>Shanghai | Jul 2023 - Jul 2024</em></strong></li>
+                                <li>Provided technical support for Azure Logic Apps integration services through individual research, team discussions, and cross-team collaboration to ensure customer satisfaction.</li>
+                                <li>Resolved over 300 support tickets involving Azure products such as Monitor, Sentinel, Virtual Network, Web Application Firewall, and Microsoft Entra ID.</li>
+                            </ul>
+                            <i class="fa-solid fa-trash trash-icon-exp"></i>
+                        </div>
+                        <div class="component">
+                            <ul>
+                                <li><strong>Huawei Digital Power Technology, Software Development Engineer</strong></li>
+                                <li><strong><em>Shenzhen | Mar 2022 - Aug 2022</em></strong></li>
+                                <li>Participated in the productization of intelligent battery algorithms, including data acquisition, data preprocessing, feature engineering, model inference, and unit testing.</li>
+                                <li>Constructed test data using Python libraries such as NumPy and Pandas for unit testing to ensure algorithm consistency.</li>
+                            </ul>
+                            <i class="fa-solid fa-trash trash-icon-exp"></i>
+                        </div>
+                        <div class="component">
+                            <ul>
+                                <li><strong>Dell, Global Operations Engineer, Intern</strong></li>
+                                <li><strong><em>Shanghai | Jul 2021 - Sep 2021</em></strong></li>
+                                <li>Participated in the construction of a cross-departmental data integration platform to enhance data access management and reduce the risk of data leakage.</li>
+                                <li>Used PowerBI to visualize business logic behind the integration platform, assisting the development team in understanding business requirements.</li>
+                            </ul>
+                            <i class="fa-solid fa-trash trash-icon-exp"></i>
+                        </div>
+                    </div>
+                    <div id="add-exp" class="add-button">+</div>
+                </section>
+            </div>
+            </section>
+        </div>
+    </main>
+    <script src="js/edit.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://kit.fontawesome.com/e212b5add5.js" crossorigin="anonymous"></script>
+</body>
+</html>

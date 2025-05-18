@@ -1,0 +1,229 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+html {
+  font-size: 16px; /*  this affect all element size*/
+}
+body {
+  font-family: "Segoe UI", Tahoma, sans-serif;
+  color: #3498db;
+  background: #ffffff;
+  font-size: 1rem;
+}
+header {
+  background: #ffffff;
+  margin-top: 1rem;
+  text-align: center;
+  padding: 1rem;
+}
+h1 {
+  font-size: 2rem;
+}
+i {
+  margin: 0 0.5rem;
+  border-radius: 10%;
+}
+i:hover{
+  cursor: pointer;
+  background: rgba(147, 143, 139, 0.41);
+}
+section {
+  display: flex;
+  flex-direction: column;
+}
+ul {
+  list-style-type: none;
+  padding-left: 2rem;
+  margin-bottom: 1rem;
+}
+
+/* top icons*/
+#head-icons {
+  top: 1rem;
+  right: 1rem;
+  margin: 0.2rem;
+  position: fixed;
+  color: #3498db;
+}
+#head-icons i{
+  font-size: 3rem;
+  margin: 0.6rem;
+}
+
+/* main content*/
+.edit-main {
+  display: flex;
+  justify-content: space-evenly;
+  flex-direction: row;
+  background: #ffffff;
+}
+/* split evenly*/
+#preview-container,
+#form-container{
+  width: 48%;
+}
+.form-section, .preview-section {
+  width: 100%;
+  padding: 1rem;
+  background: #f4f4f4;
+}
+.preview-section {
+  margin: 1rem 0;
+}
+/* form section */
+.form-section {
+  position: sticky;
+  top:0;
+  left:0;
+}
+.form-section form {
+  display: flex;
+  flex-direction: column;
+  color: black;
+}
+.form-section form label {
+  margin-top: 1rem;
+  font-size: 1.2rem;
+}
+.form-section form input, .form-section form textarea {
+  padding: 0.5rem;
+  font-size: 1rem;
+}
+.form-section form button {
+  margin-top: 1.25rem;
+  padding: 1rem;
+  background-color: rgba(84, 87, 86, 0.69);
+  color: #1b1b1b;
+  font-size: 1.125rem;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+.form-section form button:hover{
+  background-color: #4b4b50;
+  color: #ffffff;
+}
+.form-container-hidden {
+  display: none;
+}
+
+/* resume preview and its section components and icons*/
+#resume-preview {
+  font-family: Arial, sans-serif;
+  background-color: #ffffff;
+  color: #000000;
+  min-width: 300px;
+  aspect-ratio: 1/1.414; /* 'auto' works fine but "1/1.414" is the better UI */
+}
+#resume-preview h2 {
+  border-bottom: black 0.3rem solid;
+  padding-bottom: 0.6rem;
+  margin-bottom: 1rem;
+}
+#resume-preview section {
+  width: 90%;
+  margin: 1% 0 2% 5%;
+}
+.component {
+  background: #ffffff;
+  position: relative;
+}
+.component:hover{
+  background: #f4f4f4;
+}
+i.fa-trash{
+  position: absolute;
+  right: 0.5rem; /*  move to end */
+  top: 50%;
+  transform: translateY(-50%);
+  display: none;
+  z-index: 10;
+  opacity: 0.5;
+}
+i.fa-square-plus, i.fa-square-minus, i.fa-up-long, i.fa-down-long {
+  display: none;
+  float:right;
+}
+i.icon-visible {
+  display:inline-block;
+}
+
+/* add button */
+.add-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 10rem;
+  height: 3rem;
+  border: 2px solid #3498db;
+  color: #3498db;
+  border-radius: 1rem;
+  font-size: 2rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 1rem auto;
+  background-color: #ffffff;
+}
+.add-button:hover {
+  background-color: #f4f4f4;
+}
+
+/* personal info*/
+#info-list {
+  text-align: center;
+  font-size: 1.5rem;
+}
+#info-list p {
+  font-size: 1rem;
+}
+
+@media print {
+  #resume-preview {
+    aspect-ratio: auto;
+  }
+}
+
+/* below need further modification*/
+/* media effect*/
+@media (max-width: 2048px) {
+  #preview-container {
+    width: 62%;
+  }
+  #form-container {
+    width: 32%;
+  }
+  #head-icons i{
+    font-size: 2.8rem;
+    margin: 0.5rem;
+  }
+}
+@media (max-width: 1536px) {
+  #preview-container {
+    width: 76%;
+  }
+  #form-container {
+    width: 20%;
+  }
+  #head-icons i{
+    font-size: 2.2rem;
+    margin: 0.4rem;
+  }
+}
+@media (max-width: 1024px) {
+  #form-container,
+  #preview-container {
+    width: 96%;
+  }
+  #head-icons i{
+    font-size: 1.4rem;
+    margin: 0.3rem;
+  }
+}
+
+/*!*for priority*!*/
+/*.pdf {*/
+/*  aspect-ratio: auto;*/
+/*}*/

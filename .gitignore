@@ -1,0 +1,6 @@
+node_modules/
+vcs.xml
+workspace.xml
+package-lock.json
+.DS_Store
+.idea
