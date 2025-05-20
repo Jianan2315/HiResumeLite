@@ -52,27 +52,26 @@ function bindAddFunction(){
     });
 }
 function bindDeleteBlock(){
-    for (let _id of [".trash-icon-edu", ".trash-icon-skill", ".trash-icon-exp"]){
-        document.querySelectorAll(_id).forEach((icon)=>{
-            const block = icon.parentElement;
-            if (block) {
-                icon.addEventListener("click", function(e) {
-                    e.stopPropagation(); // not necessary but in case
-                    deleteItem(this);
-                });
-                block.addEventListener('mouseenter', () => {
-                    icon.classList.add('icon-visible');
-                });
-                block.addEventListener('mouseleave', () => {
-                    icon.classList.remove('icon-visible');
-                });
-            } else {
-                console.error('Error: Cannot access parent element of ', icon);
-            }
-        });
-    }
+    document.querySelectorAll(".fa-solid.fa-trash").forEach((icon)=>{
+        const block = icon.parentElement;
+        if (block) {
+            icon.addEventListener("click", function(e) {
+                e.stopPropagation(); // not necessary but in case
+                deleteItem(this);
+            });
+            block.addEventListener('mouseenter', () => {
+                icon.classList.add('icon-visible');
+            });
+            block.addEventListener('mouseleave', () => {
+                icon.classList.remove('icon-visible');
+            });
+        } else {
+            console.error('Error: Cannot access parent element of ', icon);
+        }
+    });
 }
 function bindUpdateFunction() {
+    const sections = document.querySelectorAll("section[data-type]:not([data-type=\"info\"])");
     for (let type of ["info", "edu", "skill", "exp"]){
         const sections = document.querySelectorAll("."+type+"-section");
         sections.forEach(section => {
@@ -222,7 +221,7 @@ function addEduEntry(saveButton, addButton) {
                 <li><strong>${college}</strong><span>${dateString}</span></li>
                 <li>${major}</li>
             </ul>
-            <i class="fa-solid fa-trash trash-icon-edu"></i>
+            <i class="fa-solid fa-trash"></i>
         </div>`
 
     list.appendChild(wrapper.firstElementChild);
@@ -268,7 +267,7 @@ function addSkillEntry(saveButton, addButton) {
             <ul>
                 <li><strong>${name}</strong>: <span>${detail}</span></li>
             </ul>
-            <i class="fa-solid fa-trash trash-icon-skill"></i>
+            <i class="fa-solid fa-trash"></i>
         </div>`
 
     list.appendChild(wrapper.firstElementChild);
@@ -324,12 +323,12 @@ function addExpEntry(saveButton, addButton) {
                 <li><strong>${company}, ${title}</strong></li>
                 <li><strong><em>${orgAddress} | ${startDate} - ${endDate}</em></strong></li>
                 ${exp.split('\n')
-        .map(line => line.trim().replace(/^•\s*/, ''))
-        .filter(line => line.length > 0)
-        .map(line => `<li>${line}</li>`)
-        .join('\n')}
+                    .map(line => line.trim().replace(/^•\s*/, ''))
+                    .filter(line => line.length > 0)
+                    .map(line => `<li>${line}</li>`)
+                    .join('\n')}
             </ul>
-            <i class="fa-solid fa-trash trash-icon-exp"></i>
+            <i class="fa-solid fa-trash"></i>
         </div>`
 
     list.appendChild(wrapper.firstElementChild);
@@ -712,7 +711,7 @@ function restoreResumeFromJSON(data) {
                             <li><strong>${block.university}</strong><span>${block.lastmonth}</span></li>
                             <li>${block.major}</li>
                         </ul>
-                        <i class="fa-solid fa-trash trash-icon-edu"></i>
+                        <i class="fa-solid fa-trash"></i>
                     </div>
                 `
                 list.push(divContent);
@@ -737,7 +736,7 @@ function restoreResumeFromJSON(data) {
                         <ul>
                             <li><strong>${block.name}</strong>: <span>${block.detail}</span></li>
                         </ul>
-                        <i class="fa-solid fa-trash trash-icon-skill"></i>
+                        <i class="fa-solid fa-trash"></i>
                     </div>
                 `
                 list.push(divContent);
@@ -764,7 +763,7 @@ function restoreResumeFromJSON(data) {
                                 <li><strong><em>${block.loc}</em></strong></li>
                                 ${block.work.map(item => `<li>${item}</li>`).join("")}
                             </ul>
-                            <i class="fa-solid fa-trash trash-icon-exp"></i>
+                            <i class="fa-solid fa-trash"></i>
                         </div>
                 `
                 list.push(divContent);
@@ -832,7 +831,6 @@ document.addEventListener("DOMContentLoaded", function() {
         reader.onload = function()  {
             try {
                 const jsonData = JSON.parse(this.result);
-                console.log("Loaded JSON:", jsonData);
                 restoreResumeFromJSON(jsonData);
             } catch (err) {
                 alert("Invalid JSON file.");

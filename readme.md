@@ -10,7 +10,7 @@
 # Dev Track:
 ## 5/20
 1) Add import button for loading the upload resume json file. Almost done.
-2) Next: There still exist a few issues. I will go through the code.
+2) Next: There may exist a few bugs. I will go through the code.
 
 ## 5/18
 1) Clean up.
