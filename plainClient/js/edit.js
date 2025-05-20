@@ -1,5 +1,3 @@
-const PORT=3072;
-
 window.addEventListener("load", function () {
     localStorage.setItem('templateId', "1");
 
@@ -36,19 +34,22 @@ function deleteItem(icon) {
 
 // bind functions
 function bindAddFunction(){
-    for (let _id of ["add-edu", "add-skill", "add-exp"]){
-        const addButton = document.getElementById(_id);
-        addButton.addEventListener("click", function() {
+    const addButtons = document.querySelectorAll(".add-button");
+    addButtons.forEach(button => {
+        button.addEventListener("click", function() {
             hidePreview();
-            if (_id === "add-edu"){
+            const type = button.parentElement.dataset.type;
+            if (type === "edu"){
                 addEducation(this);
-            } else if (_id === "add-skill"){
+            } else if (type === "skill"){
                 addSkill(this);
-            } else{
+            } else if (type === "exp"){
                 addExp(this);
+            } else {
+                console.error("bindAddFunction(): Invalid type.")
             }
         });
-    }
+    });
 }
 function bindDeleteBlock(){
     for (let _id of [".trash-icon-edu", ".trash-icon-skill", ".trash-icon-exp"]){
@@ -612,7 +613,6 @@ function fillForm(ulBlock, type) {
     }
 }
 
-// save resume data to local json file and restore from json
 function extractResumeData() {
     const data = {
         info: {}
@@ -621,26 +621,49 @@ function extractResumeData() {
     // Extract static info
     const infoItems = document.querySelectorAll(".info-section li");
     data.info.name = infoItems[0]?.innerText.trim();
-    data.info.details = infoItems[1]?.innerText.trim();
+    data.info.detail = infoItems[1]?.innerText.trim();
 
     // Preserve order by extracting visible section titles
     const preview = document.querySelector("#resume-preview");
     const sections = preview.querySelectorAll("section:not([data-type=\"info\"])");
     sections.forEach(section => {
-        const title = section.querySelector("h2 span")?.innerText.trim();
+        const title = section.querySelector("h2 span").innerText.trim();
+        const type = section.dataset.type;
         const listContainer = section.querySelector(":scope > div");
 
-        const entries = [];
-        listContainer.querySelectorAll(".component").forEach(component => {
-            const items = Array.from(component.querySelectorAll("li")).map(li => li.innerText.trim());
-            entries.push(items);
+        const sectionObject = {type:type};
+        listContainer.querySelectorAll(".component").forEach((component, index) => {
+            if (type === "edu") {
+                const liItems = component.querySelectorAll("li");
+                const block = {};
+                block.university = liItems[0].querySelector("strong").innerText.trim();
+                block.lastmonth = liItems[0].querySelector("span").innerText.trim();
+                block.major = liItems[1].innerText.trim();
+                sectionObject[index] = block;
+            } else if (type === "skill") {
+                const liItem = component.querySelector("li");
+                const block = {};
+                block.name = liItem.querySelector("strong").innerText.trim();
+                block.detail = liItem.querySelector("span").innerText.trim();
+                sectionObject[index] = block;
+            } else if (type === "exp") {
+                const liItems = component.querySelectorAll("li");
+                const block = {};
+                block.org = liItems[0].innerText.trim();
+                block.loc = liItems[1].innerText.trim();
+                block.work = Array.from(liItems).slice(2).map(liItem=> liItem.innerText.trim());
+                sectionObject[index] = block;
+            } else {
+                console.error("extractResumeData(): Invalid type.");
+            }
         });
 
-        data[title] = entries;
+        data[title] = sectionObject;
     });
 
     return data;
 }
+// stringify data then save as local json file
 function saveAsJSON(data, filename = "resume.json") {
     const jsonStr = JSON.stringify(data, null, 2);
     const blob = new Blob([jsonStr], { type: "application/json" });
@@ -655,16 +678,125 @@ function saveAsJSON(data, filename = "resume.json") {
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
 }
-//
-// Below needs further modification
-//
+// restore from parsed json
+function restoreResumeFromJSON(data) {
+    // Restore Info
+    const info = data.info;
+    document.querySelector(".info-section > div").innerHTML = `
+        <div class="component">
+          <ul>
+            <li><strong>${info.name}</strong></li>
+            <li><p>${info.detail}</p></li>
+          </ul>
+        </div>
+    `;
+
+    const sections = document.querySelectorAll("section[data-type]:not([data-type=\"info\"])");
+    const preview = document.querySelector("#resume-preview");
+    sections.forEach(section => {
+        section.remove();
+    });
+
+    for (const [title, sectionObject] of Object.entries(data)) {
+        if (title === "info") continue;
+
+        const type = sectionObject.type;
+        const len = Object.keys(sectionObject).length;
+        const list = [];
+        if (type === "edu") {
+            for (let i = 0; i < len-1; i++) {
+                const block = sectionObject[i];
+                const divContent = `
+                    <div class="component">
+                        <ul>
+                            <li><strong>${block.university}</strong><span>${block.lastmonth}</span></li>
+                            <li>${block.major}</li>
+                        </ul>
+                        <i class="fa-solid fa-trash trash-icon-edu"></i>
+                    </div>
+                `
+                list.push(divContent);
+            }
+            const outer = document.createElement("div");
+            outer.innerHTML = `
+                <section class="edu-section" data-type="edu">
+                    <h2><span>${title}</span><i class="fa-regular fa-square-plus"></i><i class="fa-regular fa-square-minus"></i><i class="fa-solid fa-up-long"></i><i class="fa-solid fa-down-long"></i></h2>
+                    <div>
+                    </div>
+                    <div class="add-button">+</div>
+                </section>
+            `;
+            const section = outer.firstElementChild;
+            section.querySelector("div").innerHTML = list.join("");
+            preview.appendChild(section);
+        } else if (type === "skill") {
+            for (let i = 0; i < len-1; i++) {
+                const block = sectionObject[i];
+                const divContent = `
+                    <div class="component">
+                        <ul>
+                            <li><strong>${block.name}</strong>: <span>${block.detail}</span></li>
+                        </ul>
+                        <i class="fa-solid fa-trash trash-icon-skill"></i>
+                    </div>
+                `
+                list.push(divContent);
+            }
+            const outer = document.createElement("div");
+            outer.innerHTML = `
+                <section class="skill-section" data-type="skill">
+                    <h2><span>${title}</span><i class="fa-regular fa-square-plus"></i><i class="fa-regular fa-square-minus"></i><i class="fa-solid fa-up-long"></i><i class="fa-solid fa-down-long"></i></h2>
+                    <div>
+                    </div>
+                    <div class="add-button">+</div>
+                </section>
+            `;
+            const section = outer.firstElementChild;
+            section.querySelector("div").innerHTML = list.join("");
+            preview.appendChild(section);
+        } else if (type === "exp") {
+            for (let i = 0; i < len-1; i++) {
+                const block = sectionObject[i];
+                const divContent = `
+                        <div class="component">
+                            <ul>
+                                <li><strong>${block.org}</strong></li>
+                                <li><strong><em>${block.loc}</em></strong></li>
+                                ${block.work.map(item => `<li>${item}</li>`).join("")}
+                            </ul>
+                            <i class="fa-solid fa-trash trash-icon-exp"></i>
+                        </div>
+                `
+                list.push(divContent);
+            }
+            const outer = document.createElement("div");
+            outer.innerHTML = `
+                <section class="exp-section" data-type="exp">
+                    <h2><span>${title}</span><i class="fa-regular fa-square-plus"></i><i class="fa-regular fa-square-minus"></i><i class="fa-solid fa-up-long"></i><i class="fa-solid fa-down-long"></i></h2>
+                    <div>
+                    </div>
+                    <div class="add-button">+</div>
+                </section>
+            `;
+            const section = outer.firstElementChild;
+            section.querySelector("div").innerHTML = list.join("");
+            preview.appendChild(section);
+        } else {
+            console.error("extractResumeData(): Invalid type.");
+        }
+    }
+
+    bindFunctions();
+}
+
+// functions: download json, import json, download/print resume
 document.addEventListener("DOMContentLoaded", function() {
     if (localStorage.getItem("restore")) {
         document.body.innerHTML = localStorage.getItem("restore");
     }
-    // Get the button and add an event listener
+
     const icons = document.getElementById("head-icons")
-    const downloadButton = icons.querySelector("#download-icon");
+    const importButton = icons.querySelector("#import-icon");
     const saveButton = icons.querySelector("#save-icon");
     const printButton = icons.querySelector("#print-icon");
 
@@ -681,179 +813,36 @@ document.addEventListener("DOMContentLoaded", function() {
         printElement.style.padding = "0";
 
         document.body.innerHTML = printElement.outerHTML; // outerHTML: string of DOM element object
-        for (let e of ["add-edu","add-skill","add-exp"]){
-            if (document.getElementById(e)){
-                const element = document.getElementById(e);
-                element.style.display="none";
-            }
-        }
+        document.querySelectorAll(".add-button").forEach(button => {
+            button.style.display="none";
+        });
+
         window.print();
         document.body.innerHTML = originalContent; // Restore original content
         localStorage.setItem("restore", originalContent);
         location.reload(); // Reload the page to restore event bindings
     });
 
-    downloadButton.addEventListener("click", () => {
-        // Get the HTML content to be converted
-        let element = document.getElementById("resume-preview");
-        const icons= element.querySelectorAll(".editIcon");
+    const jsonInput = document.getElementById("upload-json");
+    jsonInput.addEventListener("change", function() {
+        const file = this.files[0];
+        if (!file) return;
 
-        for (let e of ["add-edu","add-skill","add-exp","add-proj","add-achi","add-lang"]){
-            if (document.getElementById(e)){
-                const element = document.getElementById(e);
-                element.style.display="none";
+        const reader = new FileReader();
+        reader.onload = function()  {
+            try {
+                const jsonData = JSON.parse(this.result);
+                console.log("Loaded JSON:", jsonData);
+                restoreResumeFromJSON(jsonData);
+            } catch (err) {
+                alert("Invalid JSON file.");
+                console.error(err);
             }
-        }
-
-        // Use html2pdf to convert the content to a PDF and save it
-        html2pdf()
-            .from(element)
-            .set({
-                margin: 0,               // Optional: Adjust margins (in inches)
-                filename: "output.pdf",   // Optional: Specify the file name
-                html2canvas: { scale: 2 }, // Optional: Higher quality canvas rendering
-                jsPDF: { unit: "in", format: "a4", orientation: "portrait" }, // Optional: Specify PDF settings
-            })
-            .then(()=>icons.forEach(icon=>{icon.classList.add("editIcon-hidden")}))
-            .then(()=>element.classList.add("pdf"))
-            .save() // This triggers the download of the PDF
-            .then(()=>{
-                localStorage.clear();// Just remove data when user leaves this page.
-            })
-        ;
-    });
-});
-function saveDatabase(resumeData, resumeId=null) {
-    for (let e of ["add-edu","add-skill","add-exp","add-proj","add-achi","add-lang"]){
-        if (document.getElementById(e)){
-            const element = document.getElementById(e);
-            element.style.display="none";
-        }
-    }
-    const previewSection = document.querySelector('#resume-preview');
-    html2canvas(previewSection, {logging: false})
-        .then(canvas => {
-            // Convert the canvas to a data URL
-            const imageData = canvas.toDataURL('image/png');
-            const resumeJson = JSON.stringify(resumeData, null, 4);
-
-            // Proceed with fetch after setting the thumbnail
-            if (!resumeId) {
-                return fetch(`http://localhost:${PORT}/test/create/resume`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        email: `${localStorage.getItem('email')}`,
-                        json: resumeJson,
-                        templateId: `${localStorage.getItem('templateId')}`,
-                        thumbnail: imageData
-                    }),
-                });
-            } else {
-                return fetch(`http://localhost:${PORT}/test/update/resume`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        id: resumeId,
-                        json: resumeJson,
-                        thumbnail: imageData
-                    }),
-                });
-            }
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            return response.json(); // Parse the JSON response
-        })
-        .then(data => console.log('Response from /create/resume:\n', data.message))
-        .catch(error => console.error('Error:', error));
-}
-
-function saveLocal(resumeData){
-    fetch(`http://localhost:${PORT}/save`, {
-        method: 'POST', // HTTP POST method
-        headers: {
-            'Content-Type': 'application/json' // Indicate JSON format
-        },
-        body: JSON.stringify(resumeData, null, 4) // Convert the object to JSON string
-    })
-        .then(response => response.json()) // Parse the JSON response
-        .then(data => {
-            console.log('Success:', data.message); // Log success message from the backend
-        })
-        .catch(error => {
-            console.error('Error:', error); // Log errors if any
-        });
-}
-
-function extractData() {
-    const resumeData = {};
-    const params = new URLSearchParams(window.location.search);
-    const templateId = parseInt(params.get("template"));
-
-    if (templateId === 1) {
-        // Personal Info
-        const personalInfo = document.querySelector('#personal-info');
-        resumeData.personal_info = {
-            name: personalInfo.querySelector('h1').innerText,
-            phone: personalInfo.querySelector('p').innerText.split('|')[0].trim().replace('Phone: ', ''),
-            email: personalInfo.querySelector('p').innerText.split('|')[1].trim().replace('Email: ', ''),
-            location: personalInfo.querySelector('p').innerText.split('|')[2].trim().replace('Location: ', '')
         };
 
-        // Education Section
-        resumeData.education = [];
-        const eduSection = document.querySelector('#edu-section');
-        const eduRows = eduSection.querySelectorAll('table tbody tr');
-        for (let i = 0; i < eduRows.length; i += 2) {
-            const institutionRow = eduRows[i];
-            const degreeRow = eduRows[i + 1];
-            resumeData.education.push({
-                institution: institutionRow.querySelector('td strong').innerText,
-                graduation_date: institutionRow.querySelectorAll('td')[1].innerText,
-                degree: degreeRow.querySelector('td').innerText
-            });
-        }
-
-        // Personal Skills
-        const skillSection = document.querySelector('#skill-section');
-        resumeData.personal_skills={};
-        skillSection.querySelectorAll('ul li').forEach(skill=>{
-            const [name, detail] = splitOnFirstColon(skill.innerText);
-            resumeData.personal_skills[name]=detail;
-        });
-
-
-
-        // Professional Experience
-        resumeData.professional_experience = [];
-        const expSection = document.querySelector('#exp-section');
-        const experienceEntries = expSection.querySelectorAll('.component');
-        for (let i = 0; i < experienceEntries.length; i += 3) {
-            const companyPosition = experienceEntries[i];
-            const duration = experienceEntries[i + 1];
-            const responsibilities = experienceEntries[i + 2];
-            const responsibilityList = [];
-            responsibilities.querySelectorAll('li').forEach(li => {
-                responsibilityList.push(li.innerText);
-            });
-            resumeData.professional_experience.push({
-                company: companyPosition.innerText.split(',')[0].trim(),
-                position: companyPosition.innerText.split(',')[1].trim(),
-                location: duration.innerText.split('|')[0].trim(),
-                start_end_dates: duration.innerText.split('|')[1].trim(),
-                responsibilities: responsibilityList
-            });
-        }
-    }
-
-    return resumeData
-}
-
-function splitOnFirstColon(str) {
-    const index = str.indexOf(':');
-    if (index === -1) return [str];  // No colon found
-    return [str.substring(0, index), str.substring(index + 1)];
-}
+        reader.readAsText(file);
+    });
+    importButton.addEventListener("click", () => {
+        jsonInput.click();
+    });
+});

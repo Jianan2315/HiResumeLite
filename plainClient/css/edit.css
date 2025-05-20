@@ -172,11 +172,11 @@ i.icon-visible {
 }
 
 /* personal info*/
-#info-list {
+.info-section {
   text-align: center;
   font-size: 1.5rem;
 }
-#info-list p {
+.info-section p {
   font-size: 1rem;
 }
 

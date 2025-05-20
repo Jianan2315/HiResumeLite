@@ -7,9 +7,10 @@
     <link rel="stylesheet" href="css/edit.css">
 </head>
 <body>
+    <input type="file" id="upload-json" accept=".json" style="display: none;" />
     <div id="head-icons">
         <i id="save-icon" class="fa-solid fa-floppy-disk"></i>
-        <i id="download-icon" class="fa-solid fa-download"></i>
+        <i id="import-icon" class="fa-solid fa-upload"></i>
         <i id="print-icon" class="fa-solid fa-print"></i>
     </div>
 
@@ -106,12 +107,12 @@
                         <div class="component">
                             <ul>
                                 <li><strong>Boston University</strong><span>Dec 2019</span></li>
-                                <li>MS in Software Engineering Systems</li>
+                                <li>BS in Computer Science</li>
                             </ul>
                             <i class="fa-solid fa-trash trash-icon-edu"></i>
                         </div>
                     </div>
-                    <div id="add-edu" class="add-button">+</div>
+                    <div class="add-button">+</div>
                 </section>
 
                 <!-- Personal Skills Section -->
@@ -137,7 +138,7 @@
                             <i class="fa-solid fa-trash trash-icon-skill"></i>
                         </div>
                     </div>
-                    <div id="add-skill" class="add-button">+</div>
+                    <div class="add-button">+</div>
                 </section>
 
                 <!-- Professional Experience Section -->
@@ -172,15 +173,13 @@
                             <i class="fa-solid fa-trash trash-icon-exp"></i>
                         </div>
                     </div>
-                    <div id="add-exp" class="add-button">+</div>
+                    <div class="add-button">+</div>
                 </section>
             </div>
             </section>
         </div>
     </main>
     <script src="js/edit.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://kit.fontawesome.com/e212b5add5.js" crossorigin="anonymous"></script>
 </body>
 </html>
