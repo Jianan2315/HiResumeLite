@@ -1,12 +1,12 @@
 window.addEventListener("load", function () {
     localStorage.setItem('templateId', "1");
 
-    if (localStorage.getItem("restore")){
+    if (sessionStorage.getItem("restore")){
         console.log("Restore content exists.");
     }
 
-    if (!localStorage.getItem("restore")){
-        localStorage.removeItem("restore");
+    if (!sessionStorage.getItem("restore")){
+        sessionStorage.removeItem("restore");
     } else {
         console.log("Pass.");
     }
@@ -16,6 +16,7 @@ window.addEventListener("load", function () {
 
 function bindFunctions() {
     bindDeleteBlock(); // Bind trash icon with delete function
+    bindMoveForSkill(); // Only for changing skill items order
     bindAddFunction(); // Bind all add buttons with add function
     bindUpdateFunction(); // Bind update function
     bindSectionFunction(); // Bind move up/down function for each section
@@ -49,6 +50,21 @@ function bindAddFunction(){
                 console.error("bindAddFunction(): Invalid type.")
             }
         });
+    });
+}
+function bindMoveForSkill(){
+    document.querySelectorAll(".fa-solid.fa-arrow-up").forEach((icon)=>{
+        const block = icon.parentElement;
+        if (block) {
+            block.addEventListener('mouseenter', () => {
+                icon.classList.add('icon-visible');
+            });
+            block.addEventListener('mouseleave', () => {
+                icon.classList.remove('icon-visible');
+            });
+        } else {
+            console.error('Error: Cannot access parent element of ', icon);
+        }
     });
 }
 function bindDeleteBlock(){
@@ -790,8 +806,8 @@ function restoreResumeFromJSON(data) {
 
 // functions: download json, import json, download/print resume
 document.addEventListener("DOMContentLoaded", function() {
-    if (localStorage.getItem("restore")) {
-        document.body.innerHTML = localStorage.getItem("restore");
+    if (sessionStorage.getItem("restore")) {
+        document.body.innerHTML = sessionStorage.getItem("restore");
     }
 
     const icons = document.getElementById("head-icons")
@@ -818,7 +834,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         window.print();
         document.body.innerHTML = originalContent; // Restore original content
-        localStorage.setItem("restore", originalContent);
+        sessionStorage.setItem("restore", originalContent);
         location.reload(); // Reload the page to restore event bindings
     });
 

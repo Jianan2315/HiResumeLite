@@ -38,7 +38,10 @@ ul {
   padding-left: 2rem;
   margin-bottom: 1rem;
 }
-
+.edu-section .component span {
+  float: right;
+  margin-right: 2.5rem;
+}
 /* top icons*/
 #head-icons {
   top: 1rem;
@@ -134,18 +137,24 @@ ul {
 .component:hover{
   background: #f4f4f4;
 }
-i.fa-trash{
+i.fa-trash, i.fa-arrow-up{
   position: absolute;
-  right: 0.5rem; /*  move to end */
   top: 50%;
   transform: translateY(-50%);
   display: none;
   z-index: 10;
   opacity: 0.5;
 }
+i.fa-trash{
+  right: 0.5rem; /*  move to end */
+}
+i.fa-arrow-up{
+  right: 2rem; /*  move to left of fa-trash */
+}
+
 i.fa-square-plus, i.fa-square-minus, i.fa-up-long, i.fa-down-long {
   display: none;
-  float:right;
+  float: right;
 }
 i.icon-visible {
   display:inline-block;
@@ -222,8 +231,3 @@ i.icon-visible {
     margin: 0.3rem;
   }
 }
-
-/*!*for priority*!*/
-/*.pdf {*/
-/*  aspect-ratio: auto;*/
-/*}*/
