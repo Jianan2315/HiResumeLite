@@ -62,6 +62,14 @@ function bindMoveForSkill(){
             block.addEventListener('mouseleave', () => {
                 icon.classList.remove('icon-visible');
             });
+            block.addEventListener("click", function (e){
+                e.stopPropagation();
+                const current = this.closest("div.component");
+                const prev = current.previousElementSibling;
+                if (prev) {
+                    current.parentElement.insertBefore(current, prev);
+                }
+            });
         } else {
             console.error('Error: Cannot access parent element of ', icon);
         }
