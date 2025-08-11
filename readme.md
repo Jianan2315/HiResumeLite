@@ -8,6 +8,16 @@
 2) Double-click 'templateSelect.html'(unnecessary, but I keep it) or 'edit.html'.
 
 # Dev Track:
+## 8/11/2025
+1) Skip "Info section should allow changing each detail name" because you can easily edit the element directly instead. 
+2) Investigate cause of "Expected one copy but got multiple ones by exp section plus icon":
+   - This is a common issue across all sections
+   - Clicking the Add button once will add 2^n copies. The pattern is 1, 2, 4, 8...
+   - The issue was caused by duplicate binding. 
+   - The solution is easy: add a signal. But this means I have to go through all code again. 
+   - Issue: Check 'edit.js' line 154.
+3) Thus, I will fix the remaining "multiple copies" issue later due to no AC right now.
+
 ## 8/10/2025
 1) Create the move-up function and bind it to the arrow-up icon.
 2) Next: Fix the remaining issues.
