@@ -8,6 +8,12 @@
 2) Double-click 'templateSelect.html'(unnecessary, but I keep it) or 'edit.html'.
 
 # Dev Track:
+## 8/13/2025
+1) I installed my AC today! Great!
+2) Instead of reviewing all code, I find and implement a workaround to solve the remaining issue.
+3) I don't know if I will embed GPT since I don't need to edit my resume :(
+
+
 ## 8/11/2025
 1) Skip "Info section should allow changing each detail name" because you can easily edit the element directly instead. 
 2) Investigate cause of "Expected one copy but got multiple ones by exp section plus icon":

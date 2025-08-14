@@ -14,12 +14,12 @@ window.addEventListener("load", function () {
     bindFunctions();
 });
 
-function bindFunctions() {
+function bindFunctions(bindCopy=false) {
     bindDeleteBlock(); // Bind trash icon with delete function
     bindMoveForSkill(); // Only for changing skill items order
     bindAddFunction(); // Bind all add buttons with add function
     bindUpdateFunction(); // Bind update function
-    bindSectionFunction(); // Bind move up/down function for each section
+    bindSectionFunction(bindCopy); // Bind move up/down function for each section
     addBulletToExp(); // Add bullets in exp-like section
 }
 function cancelEntry() {
@@ -111,7 +111,7 @@ function bindUpdateFunction() {
         });
     }
 }
-function bindSectionFunction(){ // bind operations for each section inside preview container
+function bindSectionFunction(bindCopy=false){ // bind operations for each section inside preview container
     const preview = document.querySelector("#resume-preview");
     const sections = preview.querySelectorAll("section:not([data-type=\"info\"])");
     sections.forEach(section => {
@@ -120,6 +120,17 @@ function bindSectionFunction(){ // bind operations for each section inside previ
         const down = section.querySelector(".fa-down-long");
         const plus = section.querySelector(".fa-square-plus");
         const minus = section.querySelector(".fa-square-minus");
+
+        if (bindCopy === false){
+            // bindSectionFunction initialize
+            // default case: nothing to do
+        } else if (bindCopy && section.dataset.new !== undefined && section.dataset.new === "yes"){
+            delete section.dataset.new;
+        } else {
+            // bindSectionFunction forEach pass once
+            return;
+        }
+
         title.addEventListener('mouseenter', () => {
             for (let x of [up, down, plus, minus]) {
                 x.classList.add('icon-visible');
@@ -150,8 +161,9 @@ function bindSectionFunction(){ // bind operations for each section inside previ
             e.stopPropagation();
             const current = this.closest("section");
             const clone = current.cloneNode(true);  // deep copy (includes children)
+            clone.dataset.new="yes";
             current.parentElement.appendChild(clone);
-            bindFunctions();
+            bindFunctions(bindCopy=true);
         });
         minus.addEventListener("click", function(e){
             e.stopPropagation();
