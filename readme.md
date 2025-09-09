@@ -8,6 +8,9 @@
 2) Double-click 'templateSelect.html'(unnecessary, but I keep it) or 'edit.html'.
 
 # Dev Track:
+## 9/8/2025
+1) Simplify CSS
+
 ## 8/13/2025
 1) I installed my AC today! Great!
 2) Instead of reviewing all code, I find and implement a workaround to solve the remaining issue.
