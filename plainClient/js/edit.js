@@ -93,16 +93,15 @@ function bindDeleteBlock(){
     });
 }
 function bindUpdateFunction() {
-    const sections = document.querySelectorAll("section[data-type]:not([data-type=\"info\"])");
     for (let type of ["info", "edu", "skill", "exp"]){
-        const sections = document.querySelectorAll("."+type+"-section");
-        sections.forEach(section => {
+        const section = document.querySelectorAll("."+type+"-section");
+        section.forEach(component => {
             let sectionTitle = null;
             if (type !== "info"){
-                sectionTitle = section.querySelector("h2");
+                sectionTitle = component.querySelector("h2");
                 sectionTitle.addEventListener('click', ()=> fillSectionName(sectionTitle));
             }
-            const ulBlocks = section.querySelectorAll(".component ul");
+            const ulBlocks = component.querySelectorAll(".component ul");
             ulBlocks.forEach(ulBlock => {
                 ulBlock.addEventListener('click', ()=> fillForm(ulBlock, type));
             });
