@@ -1,6 +1,4 @@
 window.addEventListener("load", function () {
-    localStorage.setItem('templateId', "1");
-
     if (sessionStorage.getItem("restore")){
         console.log("Restore content exists.");
     }
@@ -125,9 +123,9 @@ function bindSectionFunction(bindCopy=false){ // bind operations for each sectio
             // bindSectionFunction initialize
             // default case: nothing to do
         } else if (bindCopy && section.dataset.new !== undefined && section.dataset.new === "yes"){
-            delete section.dataset.new;
+            delete section.dataset.new; // then execute one time
         } else {
-            // bindSectionFunction forEach pass once
+            // bindSectionFunction forEach only executes one time when bindCopy === true
             return;
         }
 
