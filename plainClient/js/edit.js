@@ -1,12 +1,12 @@
 window.addEventListener("load", function () {
     if (sessionStorage.getItem("restore")){
-        console.log("Restore content exists.");
+        console.log("Content exists.");
     }
 
     if (!sessionStorage.getItem("restore")){
         sessionStorage.removeItem("restore");
     } else {
-        console.log("Pass.");
+        console.log("Restore content.");
     }
 
     bindFunctions();
@@ -60,7 +60,7 @@ function bindMoveForSkill(){
             block.addEventListener('mouseleave', () => {
                 icon.classList.remove('icon-visible');
             });
-            block.addEventListener("click", function (e){
+            icon.addEventListener("click", function (e){
                 e.stopPropagation();
                 const current = this.closest("div.component");
                 const prev = current.previousElementSibling;
@@ -103,7 +103,12 @@ function bindUpdateFunction() {
             }
             const ulBlocks = component.querySelectorAll(".component ul");
             ulBlocks.forEach(ulBlock => {
-                ulBlock.addEventListener('click', ()=> fillForm(ulBlock, type));
+                ulBlock.addEventListener('click', ()=> {
+                    if (type === "info") fillInfoForm(ulBlock);
+                    else if (type === "edu") fillEducationForm(ulBlock);
+                    else if (type === "skill") fillSkillForm(ulBlock);
+                    else fillExperienceForm(ulBlock);
+                });
             });
         });
     }
@@ -632,17 +637,6 @@ function fillExperienceForm(ulBlock) {
     form.querySelector('#cancel-exp-entry').addEventListener('click', function() {
         cancelEntry();
     });
-}
-function fillForm(ulBlock, type) {
-    if (type === "info"){
-        ulBlock.addEventListener('click', ()=> fillInfoForm(ulBlock));
-    } else if (type === "edu") {
-        ulBlock.addEventListener('click', () => fillEducationForm(ulBlock));
-    } else if (type === "skill") {
-        ulBlock.addEventListener('click', () => fillSkillForm(ulBlock));
-    } else {
-        ulBlock.addEventListener('click', () => fillExperienceForm(ulBlock));
-    }
 }
 
 function extractResumeData() {

@@ -8,6 +8,12 @@
 2) Double-click 'templateSelect.html'(unnecessary, but I keep it) or 'edit.html'.
 
 # Dev Track:
+## 9/27/2025
+1) solved issue: 'ulblock' currently can be triggered by one click instead of  two clicks.
+2) new bug: skill section, 'update' function binds to 'move up' function
+   - fixed: IDK why this mistake existed since I did multiple tests/checks '_'
+3) potential risk for use: may execute script if u load unknown json since no escape
+
 ## 9/26/2025
 1) Remove optional widgets.awk
 
