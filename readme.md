@@ -8,6 +8,12 @@
 2) Double-click 'templateSelect.html'(unnecessary, but I keep it) or 'edit.html'.
 
 # Dev Track:
+## 9/28/2025
+1) Plan:
+   - replace current iteration bindings with event delegation
+   - add 'history' record for each section
+   - add GPT to suggest adjusting resume content by the given job description
+
 ## 9/27/2025
 1) solved issue: 'ulblock' currently can be triggered by one click instead of  two clicks.
 2) new bug: skill section, 'update' function binds to 'move up' function
