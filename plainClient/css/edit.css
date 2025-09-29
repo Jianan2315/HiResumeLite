@@ -113,7 +113,7 @@ ul {
   background-color: var(--black);
   color: var(--white);
 }
-.form-container-hidden {
+.container-hidden {
   display: none;
 }
 
@@ -153,7 +153,7 @@ i.fa-trash{
 i.fa-arrow-up{
   right: 2rem; /*  move to left of fa-trash */
 }
-i.fa-square-plus, i.fa-square-minus, i.fa-up-long, i.fa-down-long {
+i.fa-square-plus, i.fa-square-minus, i.fa-up-long, i.fa-down-long, i.fa-inbox{
   display: none;
   float: right;
 }

@@ -22,7 +22,7 @@ function bindFunctions(bindCopy=false) {
 }
 function cancelEntry() {
     const formContainer = document.getElementById("form-container");
-    formContainer.classList.add("form-container-hidden");
+    formContainer.classList.add("container-hidden");
     showPreview();
 }
 function deleteItem(icon) {
@@ -122,6 +122,7 @@ function bindSectionFunction(bindCopy=false){ // bind operations for each sectio
         const down = section.querySelector(".fa-down-long");
         const plus = section.querySelector(".fa-square-plus");
         const minus = section.querySelector(".fa-square-minus");
+        const archive = section.querySelector(".fa-inbox");
 
         if (bindCopy === false){
             // bindSectionFunction initialize
@@ -134,12 +135,12 @@ function bindSectionFunction(bindCopy=false){ // bind operations for each sectio
         }
 
         title.addEventListener('mouseenter', () => {
-            for (let x of [up, down, plus, minus]) {
+            for (let x of [up, down, plus, minus, archive]) {
                 x.classList.add('icon-visible');
             }
         });
         title.addEventListener('mouseleave', () => {
-            for (let x of [up, down, plus, minus]) {
+            for (let x of [up, down, plus, minus, archive]) {
                 x.classList.remove('icon-visible');
             }
         });
@@ -171,6 +172,9 @@ function bindSectionFunction(bindCopy=false){ // bind operations for each sectio
             e.stopPropagation();
             const current = this.closest("section");
             current.remove();
+        });
+        archive.addEventListener("click", function(e){
+            e.stopPropagation();
         });
     });
 }
@@ -458,7 +462,7 @@ function updateExpEntry(saveButton, ulBlock){
 function popSectionName(){
     const form = document.getElementById("resume-form");
     const formContainer = document.getElementById("form-container")
-    formContainer.classList.remove("form-container-hidden")
+    formContainer.classList.remove("container-hidden")
     form.innerHTML = `
         <label for="section">Section Name:</label>
         <input type="text" id="section" name="section">
@@ -470,7 +474,7 @@ function popSectionName(){
 function popInfoForm(){
     const form = document.getElementById("resume-form");
     const formContainer = document.getElementById("form-container")
-    formContainer.classList.remove("form-container-hidden")
+    formContainer.classList.remove("container-hidden")
     form.innerHTML = `
         <label for="name">Name:</label>
         <input type="text" id="name" name="name">
@@ -488,7 +492,7 @@ function popInfoForm(){
 function popEduForm(){
     const form = document.getElementById("resume-form");
     const formContainer = document.getElementById("form-container")
-    formContainer.classList.remove("form-container-hidden")
+    formContainer.classList.remove("container-hidden")
     form.innerHTML = `
         <label for="university">University:</label>
         <textarea id="university" name="university"></textarea>
@@ -504,7 +508,7 @@ function popEduForm(){
 function popSkillForm(){
     const form = document.getElementById("resume-form");
     const formContainer = document.getElementById("form-container")
-    formContainer.classList.remove("form-container-hidden")
+    formContainer.classList.remove("container-hidden")
     form.innerHTML = `
         <label for="new-skill-name">Skill name:</label>
         <textarea id="new-skill-name" name="new-skill-name"></textarea>
@@ -523,7 +527,7 @@ function addBullet(lines) {
 function popExpForm(){
     const form = document.getElementById("resume-form");
     const formContainer = document.getElementById("form-container")
-    formContainer.classList.remove("form-container-hidden")
+    formContainer.classList.remove("container-hidden")
     form.innerHTML = `
         <label for="company">Company:</label>
         <input type="text" id="company" name="company">
@@ -746,7 +750,7 @@ function restoreResumeFromJSON(data) {
             const outer = document.createElement("div");
             outer.innerHTML = `
                 <section class="edu-section" data-type="edu">
-                    <h2><span>${title}</span><i class="fa-regular fa-square-plus"></i><i class="fa-regular fa-square-minus"></i><i class="fa-solid fa-up-long"></i><i class="fa-solid fa-down-long"></i></h2>
+                    <h2><span>${title}</span><i class="fa-regular fa-square-plus"></i><i class="fa-regular fa-square-minus"></i><i class="fa-solid fa-up-long"></i><i class="fa-solid fa-down-long"></i><i class="fa-solid fa-inbox"></i></h2>
                     <div>
                     </div>
                     <div class="add-button">+</div>
@@ -771,7 +775,7 @@ function restoreResumeFromJSON(data) {
             const outer = document.createElement("div");
             outer.innerHTML = `
                 <section class="skill-section" data-type="skill">
-                    <h2><span>${title}</span><i class="fa-regular fa-square-plus"></i><i class="fa-regular fa-square-minus"></i><i class="fa-solid fa-up-long"></i><i class="fa-solid fa-down-long"></i></h2>
+                    <h2><span>${title}</span><i class="fa-regular fa-square-plus"></i><i class="fa-regular fa-square-minus"></i><i class="fa-solid fa-up-long"></i><i class="fa-solid fa-down-long"></i><i class="fa-solid fa-inbox"></i></h2>
                     <div>
                     </div>
                     <div class="add-button">+</div>
@@ -798,7 +802,7 @@ function restoreResumeFromJSON(data) {
             const outer = document.createElement("div");
             outer.innerHTML = `
                 <section class="exp-section" data-type="exp">
-                    <h2><span>${title}</span><i class="fa-regular fa-square-plus"></i><i class="fa-regular fa-square-minus"></i><i class="fa-solid fa-up-long"></i><i class="fa-solid fa-down-long"></i></h2>
+                    <h2><span>${title}</span><i class="fa-regular fa-square-plus"></i><i class="fa-regular fa-square-minus"></i><i class="fa-solid fa-up-long"></i><i class="fa-solid fa-down-long"></i><i class="fa-solid fa-inbox"></i></h2>
                     <div>
                     </div>
                     <div class="add-button">+</div>
