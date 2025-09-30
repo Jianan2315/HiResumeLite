@@ -13,10 +13,10 @@ window.addEventListener("load", function () {
 });
 
 function bindFunctions(bindCopy=false) {
-    bindDeleteBlock(); // Bind trash icon with delete function
+    bindKeepAndDelete(); // Bind trash icon with delete function
     bindMoveForSkill(); // Only for changing skill items order
     bindAddFunction(); // Bind all add buttons with add function
-    bindUpdateFunction(); // Bind update function
+    bindUpdateSectionContent(); // Bind update function
     bindSectionFunction(bindCopy); // Bind move up/down function for each section
     addBulletToExp(); // Add bullets in exp-like section
 }
@@ -73,26 +73,34 @@ function bindMoveForSkill(){
         }
     });
 }
-function bindDeleteBlock(){
-    document.querySelectorAll(".fa-solid.fa-trash").forEach((icon)=>{
-        const block = icon.parentElement;
-        if (block) {
-            icon.addEventListener("click", function(e) {
-                e.stopPropagation(); // not necessary but in case
-                deleteItem(this);
-            });
-            block.addEventListener('mouseenter', () => {
-                icon.classList.add('icon-visible');
-            });
-            block.addEventListener('mouseleave', () => {
-                icon.classList.remove('icon-visible');
-            });
-        } else {
-            console.error('Error: Cannot access parent element of ', icon);
-        }
-    });
+function bindKeepAndDelete(){
+    for (let selectors of [".fa-solid.fa-trash", ".fa-regular.fa-clipboard"]){
+        document.querySelectorAll(selectors).forEach((icon)=>{
+            const block = icon.parentElement;
+            if (block) {
+                icon.addEventListener("click", function(e) {
+                    e.stopPropagation(); // not necessary but in case
+                    if (selectors === ".fa-solid.fa-trash") deleteItem(this);
+                });
+                block.addEventListener('mouseenter', () => {
+                    icon.classList.add('icon-visible');
+                });
+                block.addEventListener('mouseleave', () => {
+                    icon.classList.remove('icon-visible');
+                });
+            } else {
+                console.error('Error: Cannot access parent element of ', icon);
+            }
+        });
+    }
 }
-function bindUpdateFunction() {
+function bindArchiveComponent(){
+
+}
+function bindRetrieveComponent(){
+
+}
+function bindUpdateSectionContent() {
     for (let type of ["info", "edu", "skill", "exp"]){
         const section = document.querySelectorAll("."+type+"-section");
         section.forEach(component => {
@@ -279,8 +287,8 @@ function addEduEntry(saveButton, addButton) {
     // Re-append in sorted order
     components.forEach(c => list.appendChild(c));
 
-    bindDeleteBlock();
-    bindUpdateFunction(); // Not good but simple way. Save my mind.
+    bindKeepAndDelete();
+    bindUpdateSectionContent(); // Not good but simple way. Save my mind.
     cancelEntry();
 }
 function addEducation(addButton) {
@@ -314,8 +322,8 @@ function addSkillEntry(saveButton, addButton) {
 
     list.appendChild(wrapper.firstElementChild);
 
-    bindDeleteBlock();
-    bindUpdateFunction();
+    bindKeepAndDelete();
+    bindUpdateSectionContent();
     cancelEntry();
 }
 function addSkill(addButton) {
@@ -383,8 +391,8 @@ function addExpEntry(saveButton, addButton) {
     components.forEach(comp => list.appendChild(comp));
 
     addBulletToExp();
-    bindDeleteBlock();
-    bindUpdateFunction();
+    bindKeepAndDelete();
+    bindUpdateSectionContent();
     cancelEntry();
 }
 function addExp(addButton) {
@@ -437,7 +445,7 @@ function updateInfoEntry(saveButton, ulBlock){
         </div>`
 
     list.appendChild(wrapper.firstElementChild);
-    bindUpdateFunction(); // Not good but simple way. Save my mind.
+    bindUpdateSectionContent(); // Not good but simple way. Save my mind.
     cancelEntry();
 }
 function updateEduEntry(saveButton, ulBlock){

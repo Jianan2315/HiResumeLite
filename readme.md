@@ -11,6 +11,8 @@
 ## 9/29/2025
 1) add new icons
 2) add one more container ('history') to main window (current: 'form' and 'preview')
+3) Debug 0*0 icon caused by no fontawesome pro. '/\'
+4) Working on 'Archive' and 'Retrieve' functions
 
 ## 9/28/2025
 1) Plan:

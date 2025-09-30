@@ -139,7 +139,7 @@ ul {
 .component:hover{
   background: var(--gray);
 }
-i.fa-trash, i.fa-arrow-up{
+i.fa-trash, i.fa-clipboard, i.fa-arrow-up{
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -150,8 +150,11 @@ i.fa-trash, i.fa-arrow-up{
 i.fa-trash{
   right: 0.5rem; /*  move to end */
 }
-i.fa-arrow-up{
+i.fa-clipboard{
   right: 2rem; /*  move to left of fa-trash */
+}
+i.fa-arrow-up{
+  right: 3.5rem; /*  move to left of fa-clipboard */
 }
 i.fa-square-plus, i.fa-square-minus, i.fa-up-long, i.fa-down-long, i.fa-inbox{
   display: none;
