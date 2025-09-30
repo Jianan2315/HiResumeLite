@@ -72,13 +72,10 @@ ul {
   width: 48%;
 }
 
-.form-section, .preview-section {
+.form-section {
   width: 100%;
   padding: 1rem;
   background: var(--gray);
-}
-.preview-section {
-  margin: 1rem 0;
 }
 
 /* form section */
@@ -123,6 +120,7 @@ ul {
   background-color: var(--white);
   min-width: 300px;
   aspect-ratio: 1/1.414; /* 'auto' works fine but "1/1.414" is the better UI */
+  border: 1rem solid var(--gray);
 }
 #resume-preview h2 {
   border-bottom: black 0.3rem solid;

@@ -8,6 +8,10 @@
 2) Double-click 'templateSelect.html'(unnecessary, but I keep it) or 'edit.html'.
 
 # Dev Track:
+## 9/30/2025
+1) Working on 'Archive' and 'Retrieve' functions
+2) simplify html code
+
 ## 9/29/2025
 1) add new icons
 2) add one more container ('history') to main window (current: 'form' and 'preview')

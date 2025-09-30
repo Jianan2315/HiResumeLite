@@ -95,10 +95,11 @@ function bindKeepAndDelete(){
     }
 }
 function bindArchiveComponent(){
-
+    const previewContainer = document.getElementById("resume-preview");
 }
 function bindRetrieveComponent(){
-
+    const historyContainer = document.getElementById("history-container")
+    historyContainer.classList.remove("container-hidden")
 }
 function bindUpdateSectionContent() {
     for (let type of ["info", "edu", "skill", "exp"]){
