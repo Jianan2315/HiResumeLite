@@ -63,13 +63,21 @@ ul {
 /* main content*/
 .edit-main {
   display: flex;
-  justify-content: space-evenly;
+  justify-content: center;
   flex-direction: row;
 }
-/* split evenly*/
-#preview-container,
+/* split NOT evenly*/
+#preview-container{
+  width: 44%;
+}
 #form-container{
-  width: 48%;
+  width: 28%;
+}
+#history-container{
+  width: 20%;
+}
+#preview-container,#form-container,#history-container{
+  margin: 1%;
 }
 
 .form-section {
@@ -113,14 +121,17 @@ ul {
 .container-hidden {
   display: none;
 }
+.container-show {
+}
 
 /* resume preview and its section components and icons*/
+#resume-preview, #history-container{
+  border: 1rem solid var(--gray);
+}
 #resume-preview {
   font-family: Arial, sans-serif;
-  background-color: var(--white);
   min-width: 300px;
   aspect-ratio: 1/1.414; /* 'auto' works fine but "1/1.414" is the better UI */
-  border: 1rem solid var(--gray);
 }
 #resume-preview h2 {
   border-bottom: black 0.3rem solid;
@@ -190,44 +201,25 @@ i.icon-visible {
   font-size: 1rem;
 }
 
+/* history */
+.history-section{
+  margin: 3%;
+}
+.history-section h2{
+  margin-bottom: 0.5rem;
+}
+.solid-break {
+  border-top: 0.2rem solid var(--gray-dark);
+  margin: 0 3%;
+}
+.dash-break {
+  border-bottom: 0.3rem dashed var(--gray);
+  margin: 0.5rem 0;
+}
+
+/* all visual related CSS BELOW*/
 @media print {
   #resume-preview {
     aspect-ratio: auto;
-  }
-}
-
-/* media effect (need further modification)*/
-@media (max-width: 2048px) {
-  #preview-container {
-    width: 62%;
-  }
-  #form-container {
-    width: 32%;
-  }
-  #head-icons i{
-    font-size: 2.8rem;
-    margin: 0.5rem;
-  }
-}
-@media (max-width: 1536px) {
-  #preview-container {
-    width: 76%;
-  }
-  #form-container {
-    width: 20%;
-  }
-  #head-icons i{
-    font-size: 2.2rem;
-    margin: 0.4rem;
-  }
-}
-@media (max-width: 1024px) {
-  #form-container,
-  #preview-container {
-    width: 96%;
-  }
-  #head-icons i{
-    font-size: 1.4rem;
-    margin: 0.3rem;
   }
 }

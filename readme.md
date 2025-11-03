@@ -8,6 +8,41 @@
 2) Double-click 'templateSelect.html'(unnecessary, but I keep it) or 'edit.html'.
 
 # Dev Track:
+## 11/03/2025
+1) Pending: Working on UI for 'Archive' and 'Retrieve' 
+   1) Pending: CSS adjustment since UI changed
+   2) Pending: link archived content with the corresponding section by section name.
+   3) Pending: add multiple functions for loading archived content
+      - Draft function `restoreEduFromJSON` without binding
+2) Slightly modify code format
+3) Plan: update resume.json structure and read/save functions accordingly
+
+## 11/02/2025
+1) Working on UI for 'Archive' and 'Retrieve' & Pending CSS adjustment since UI changed
+2) Ongoing: link archived content with the corresponding section by section name.
+3) Pending: add multiple functions for loading archived content
+
+## 11/01/2025
+1) Working on UI for 'Archive' and 'Retrieve' & Pending CSS adjustment since UI changed
+2) Add sample for archived content 
+3) Ongoing: link archived content with the corresponding section by section name.
+
+## 10/31/2025
+1) Working on UI for 'Archive' and 'Retrieve'
+2) Pending CSS adjustment since UI changed
+3) update node clone process
+4) Plan: link archived content with the corresponding section by section name.
+
+## 10/30/2025
+1) Working on 'Archive'
+2) Pending CSS adjustment since UI changed
+3) Decide to comment all CSS about adjusting for different devices since I just use 4K right now
+4) remove unused code
+
+## 10/29/2025
+1) Working on 'Archive'
+2) Move 'Retrieve' to queue
+
 ## 9/30/2025
 1) Working on 'Archive' and 'Retrieve' functions
 2) simplify html code

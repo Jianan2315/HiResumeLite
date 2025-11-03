@@ -99,7 +99,6 @@ function bindArchiveComponent(){
 }
 function bindRetrieveComponent(){
     const historyContainer = document.getElementById("history-container")
-    historyContainer.classList.remove("container-hidden")
 }
 function bindUpdateSectionContent() {
     for (let type of ["info", "edu", "skill", "exp"]){
@@ -174,6 +173,8 @@ function bindSectionFunction(bindCopy=false){ // bind operations for each sectio
             const current = this.closest("section");
             const clone = current.cloneNode(true);  // deep copy (includes children)
             clone.dataset.new="yes";
+            const count = preview.querySelectorAll("section").length + 1;
+            clone.querySelector("h2").textContent += ` ${count}`;
             current.parentElement.appendChild(clone);
             bindFunctions(bindCopy=true);
         });
@@ -246,7 +247,7 @@ function adjustTextarea(form) {
 
 // Add entries
 function parseStringToDateObject(str) {
-    return new Date("1 " + str);  // Always use `new`
+    return new Date("1 " + str);  // Always use `new`, e.g. from "March 2020" to "1 March 2020"
 }
 function addEduEntry(saveButton, addButton) {
     // Get form input values
@@ -273,7 +274,7 @@ function addEduEntry(saveButton, addButton) {
                 <li>${major}</li>
             </ul>
             <i class="fa-solid fa-trash"></i>
-        </div>`
+        </div>`;
 
     list.appendChild(wrapper.firstElementChild);
     const components = Array.from(list.querySelectorAll(".component"));
@@ -319,7 +320,7 @@ function addSkillEntry(saveButton, addButton) {
                 <li><strong>${name}</strong>: <span>${detail}</span></li>
             </ul>
             <i class="fa-solid fa-trash"></i>
-        </div>`
+        </div>`;
 
     list.appendChild(wrapper.firstElementChild);
 
@@ -380,7 +381,7 @@ function addExpEntry(saveButton, addButton) {
                     .join('\n')}
             </ul>
             <i class="fa-solid fa-trash"></i>
-        </div>`
+        </div>`;
 
     list.appendChild(wrapper.firstElementChild);
     const components = Array.from(list.querySelectorAll(".component"));
@@ -443,7 +444,7 @@ function updateInfoEntry(saveButton, ulBlock){
                 <li><strong>${name}</strong></li>
                 <li><p> Phone: ${phone} | Email: ${email} | Location: ${location}</p></li>
             </ul>
-        </div>`
+        </div>`;
 
     list.appendChild(wrapper.firstElementChild);
     bindUpdateSectionContent(); // Not good but simple way. Save my mind.
@@ -476,8 +477,8 @@ function popSectionName(){
         <label for="section">Section Name:</label>
         <input type="text" id="section" name="section">
         <button type="button" id="update-section-name">Save</button>
-        <button type="button" id="cancel-section-name">Cancel</button>
-    `;
+        <button type="button" id="cancel-section-name">Cancel</button>`;
+
     return form;
 }
 function popInfoForm(){
@@ -494,8 +495,8 @@ function popInfoForm(){
         <label for="location">Location:</label>
         <input type="text" id="location" name="location">
         <button type="button" id="update-info-entry">Save</button>
-        <button type="button" id="cancel-info-entry">Cancel</button>
-    `;
+        <button type="button" id="cancel-info-entry">Cancel</button>`;
+
     return form;
 }
 function popEduForm(){
@@ -510,8 +511,8 @@ function popEduForm(){
         <label for="major">Major:</label>
         <textarea id="major" name="major"></textarea>       
         <button type="button" id="add-edu-entry">Save</button>
-        <button type="button" id="cancel-edu-entry">Cancel</button>
-    `;
+        <button type="button" id="cancel-edu-entry">Cancel</button>`;
+
     return form;
 }
 function popSkillForm(){
@@ -525,8 +526,8 @@ function popSkillForm(){
         <textarea id="new-skill-detail" name="new-skill-detail"></textarea>
         
         <button type="button" id="add-skill-entry">Save</button>
-        <button type="button" id="cancel-skill-entry">Cancel</button>
-    `;
+        <button type="button" id="cancel-skill-entry">Cancel</button>`;
+
     return form;
 }
 function addBullet(lines) {
@@ -552,8 +553,8 @@ function popExpForm(){
         <textarea id="exp" name="exp" oninput="addBullet(this)"></textarea>
         
         <button type="button" id="add-exp-entry">Save</button>
-        <button type="button" id="cancel-exp-entry">Cancel</button>
-    `;
+        <button type="button" id="cancel-exp-entry">Cancel</button>`;
+
     return form;
 }
 
@@ -717,9 +718,28 @@ function saveAsJSON(data, filename = "resume.json") {
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
 }
-// restore from parsed json
+// restore from archived content
+function restoreEduFromJSON(sectionTitle, sectionObject){
+    const wrapper = document.createElement("div");
+    wrapper.innerHTML = `
+        <div class="component">
+            <ul>
+                <li><strong>${sectionObject.university}</strong><span>${sectionObject.lastmonth}</span></li>
+                <li>${sectionObject.major}</li>
+            </ul>
+            <i class="fa-regular fa-clipboard"></i>
+            <i class="fa-solid fa-trash"></i>
+        </div>`;
+
+    const preview = document.getElementById("resume-preview");
+    preview.querySelectorAll("h2").forEach(h2Element => {
+        if (h2Element.textContent.trim() === sectionTitle) {
+            h2Element.nextElementSibling.appendChild(wrapper.firstElementChild);
+        }
+    });
+}
+// restore from resume.json
 function restoreResumeFromJSON(data) {
-    // Restore Info
     const info = data.info;
     document.querySelector(".info-section > div").innerHTML = `
         <div class="component">
@@ -727,8 +747,7 @@ function restoreResumeFromJSON(data) {
             <li><strong>${info.name}</strong></li>
             <li><p>${info.detail}</p></li>
           </ul>
-        </div>
-    `;
+        </div>`;
 
     const sections = document.querySelectorAll("section[data-type]:not([data-type=\"info\"])");
     const preview = document.querySelector("#resume-preview");
@@ -752,8 +771,8 @@ function restoreResumeFromJSON(data) {
                             <li>${block.major}</li>
                         </ul>
                         <i class="fa-solid fa-trash"></i>
-                    </div>
-                `
+                    </div>`;
+
                 list.push(divContent);
             }
             const outer = document.createElement("div");
@@ -763,8 +782,8 @@ function restoreResumeFromJSON(data) {
                     <div>
                     </div>
                     <div class="add-button">+</div>
-                </section>
-            `;
+                </section>`;
+
             const section = outer.firstElementChild;
             section.querySelector("div").innerHTML = list.join("");
             preview.appendChild(section);
@@ -777,8 +796,8 @@ function restoreResumeFromJSON(data) {
                             <li><strong>${block.name}</strong>: <span>${block.detail}</span></li>
                         </ul>
                         <i class="fa-solid fa-trash"></i>
-                    </div>
-                `
+                    </div>`;
+
                 list.push(divContent);
             }
             const outer = document.createElement("div");
@@ -788,8 +807,8 @@ function restoreResumeFromJSON(data) {
                     <div>
                     </div>
                     <div class="add-button">+</div>
-                </section>
-            `;
+                </section>`;
+
             const section = outer.firstElementChild;
             section.querySelector("div").innerHTML = list.join("");
             preview.appendChild(section);
@@ -804,8 +823,8 @@ function restoreResumeFromJSON(data) {
                                 ${block.work.map(item => `<li>${item}</li>`).join("")}
                             </ul>
                             <i class="fa-solid fa-trash"></i>
-                        </div>
-                `
+                        </div>`;
+
                 list.push(divContent);
             }
             const outer = document.createElement("div");
@@ -815,8 +834,8 @@ function restoreResumeFromJSON(data) {
                     <div>
                     </div>
                     <div class="add-button">+</div>
-                </section>
-            `;
+                </section>`;
+
             const section = outer.firstElementChild;
             section.querySelector("div").innerHTML = list.join("");
             preview.appendChild(section);
