@@ -8,6 +8,13 @@
 2) Double-click 'templateSelect.html'(unnecessary, but I keep it) or 'edit.html'.
 
 # Dev Track:
+## 11/05/2025
+1) Pending: Working on 'Archive' and 'Retrieve'
+   1) Pending: function `bindArchiveComponent()` & `bindRetrieveComponent()`
+   2) update html and css for 'archive'
+2) Plan: update resume.json structure and read/save functions accordingly
+
+
 ## 11/04/2025
 1) Pending: Working on UI for 'Archive' and 'Retrieve'
    1) Done: link archived content with the corresponding section by section name.

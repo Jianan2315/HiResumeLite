@@ -13,10 +13,8 @@ window.addEventListener("load", function () {
 });
 
 function bindFunctions(bindCopy=false) {
-    ```
-    bind all functionalities when initialize
-    also, bind all functionalities for a new added section
-    ```
+    // bind all functionalities when initialize
+    // also, bind all functionalities for a new added section
     bindDeleteAndArchiveWithHover(); // Bind trash icon with delete function
     bindMoveForSkill(); // Only for changing 'skill' items order
     bindAddNewComponent(); // Bind all add buttons with add function to allow adding a new component to each section
@@ -103,7 +101,7 @@ function bindArchiveComponent(){
     const previewContainer = document.getElementById("resume-preview");
 }
 function bindRetrieveComponent(){
-    const historyContainer = document.getElementById("history-container")
+    const historyContainer = document.getElementById("archive-container")
 }
 function bindUpdateSectionContent() {
     for (let type of ["info", "edu", "skill", "exp"]){

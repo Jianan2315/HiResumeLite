@@ -73,10 +73,10 @@ ul {
 #form-container{
   width: 28%;
 }
-#history-container{
+#archive-container{
   width: 20%;
 }
-#preview-container,#form-container,#history-container{
+#preview-container,#form-container,#archive-container{
   margin: 1%;
 }
 
@@ -125,7 +125,7 @@ ul {
 }
 
 /* resume preview and its section components and icons*/
-#resume-preview, #history-container{
+#resume-preview, #archive-container{
   border: 1rem solid var(--gray);
 }
 #resume-preview {
@@ -215,6 +215,9 @@ i.icon-visible {
 .dash-break {
   border-bottom: 0.3rem dashed var(--gray);
   margin: 0.5rem 0;
+}
+#archive-container i{
+  margin: 0.5rem;
 }
 
 /* all visual related CSS BELOW*/
