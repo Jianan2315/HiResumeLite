@@ -13,11 +13,15 @@ window.addEventListener("load", function () {
 });
 
 function bindFunctions(bindCopy=false) {
-    bindKeepAndDelete(); // Bind trash icon with delete function
-    bindMoveForSkill(); // Only for changing skill items order
-    bindAddFunction(); // Bind all add buttons with add function
-    bindUpdateSectionContent(); // Bind update function
-    bindSectionFunction(bindCopy); // Bind move up/down function for each section
+    ```
+    bind all functionalities when initialize
+    also, bind all functionalities for a new added section
+    ```
+    bindDeleteAndArchiveWithHover(); // Bind trash icon with delete function
+    bindMoveForSkill(); // Only for changing 'skill' items order
+    bindAddNewComponent(); // Bind all add buttons with add function to allow adding a new component to each section
+    bindUpdateSectionContent(); // Bind update function ---- allow click to update
+    bindSectionFunction(bindCopy); // Bind move up/down, delete and clone function for each section
     addBulletToExp(); // Add bullets in exp-like section
 }
 function cancelEntry() {
@@ -32,20 +36,20 @@ function deleteItem(icon) {
 }
 
 // bind functions
-function bindAddFunction(){
+function bindAddNewComponent(){
     const addButtons = document.querySelectorAll(".add-button");
     addButtons.forEach(button => {
         button.addEventListener("click", function() {
             hidePreview();
             const type = button.parentElement.dataset.type;
             if (type === "edu"){
-                addEducation(this);
+                bindButtonEventForEduForm(this);
             } else if (type === "skill"){
-                addSkill(this);
+                bindButtonEventForSkillForm(this);
             } else if (type === "exp"){
-                addExp(this);
+                bindButtonEventForExpForm(this);
             } else {
-                console.error("bindAddFunction(): Invalid type.")
+                console.error("bindAddNewComponent(): Invalid type.")
             }
         });
     });
@@ -73,7 +77,7 @@ function bindMoveForSkill(){
         }
     });
 }
-function bindKeepAndDelete(){
+function bindDeleteAndArchiveWithHover(){
     for (let selectors of [".fa-solid.fa-trash", ".fa-regular.fa-clipboard"]){
         document.querySelectorAll(selectors).forEach((icon)=>{
             const block = icon.parentElement;
@@ -81,6 +85,7 @@ function bindKeepAndDelete(){
                 icon.addEventListener("click", function(e) {
                     e.stopPropagation(); // not necessary but in case
                     if (selectors === ".fa-solid.fa-trash") deleteItem(this);
+                    // TO DO: archive
                 });
                 block.addEventListener('mouseenter', () => {
                     icon.classList.add('icon-visible');
@@ -174,7 +179,7 @@ function bindSectionFunction(bindCopy=false){ // bind operations for each sectio
             const clone = current.cloneNode(true);  // deep copy (includes children)
             clone.dataset.new="yes";
             const count = preview.querySelectorAll("section").length + 1;
-            clone.querySelector("h2").textContent += ` ${count}`;
+            clone.querySelector("h2 span").textContent += ` ${count}`;
             current.parentElement.appendChild(clone);
             bindFunctions(bindCopy=true);
         });
@@ -249,7 +254,7 @@ function adjustTextarea(form) {
 function parseStringToDateObject(str) {
     return new Date("1 " + str);  // Always use `new`, e.g. from "March 2020" to "1 March 2020"
 }
-function addEduEntry(saveButton, addButton) {
+function addEduCompFromForm(saveButton, addButton) {
     // Get form input values
     const form = saveButton.parentElement;
     const college = form.querySelector("#university").value;
@@ -273,6 +278,7 @@ function addEduEntry(saveButton, addButton) {
                 <li><strong>${college}</strong><span>${dateString}</span></li>
                 <li>${major}</li>
             </ul>
+            <i class="fa-regular fa-clipboard"></i>
             <i class="fa-solid fa-trash"></i>
         </div>`;
 
@@ -289,20 +295,20 @@ function addEduEntry(saveButton, addButton) {
     // Re-append in sorted order
     components.forEach(c => list.appendChild(c));
 
-    bindKeepAndDelete();
+    bindDeleteAndArchiveWithHover();
     bindUpdateSectionContent(); // Not good but simple way. Save my mind.
     cancelEntry();
 }
-function addEducation(addButton) {
+function bindButtonEventForEduForm(addButton) {
     const form = popEduForm();
     form.querySelector('#add-edu-entry').addEventListener('click', function() {
-        addEduEntry(this, addButton);
+        addEduCompFromForm(this, addButton);
     });
     form.querySelector('#cancel-edu-entry').addEventListener('click', function() {
         cancelEntry();
     });
 }
-function addSkillEntry(saveButton, addButton) {
+function addSkillCompFromForm(saveButton, addButton) {
     const form = saveButton.parentElement;
     const name = form.querySelector("#new-skill-name").value;
     const detail = form.querySelector("#new-skill-detail").value;
@@ -319,19 +325,21 @@ function addSkillEntry(saveButton, addButton) {
             <ul>
                 <li><strong>${name}</strong>: <span>${detail}</span></li>
             </ul>
+            <i class="fa-solid fa-arrow-up"></i>
+            <i class="fa-regular fa-clipboard"></i>
             <i class="fa-solid fa-trash"></i>
         </div>`;
 
     list.appendChild(wrapper.firstElementChild);
 
-    bindKeepAndDelete();
+    bindDeleteAndArchiveWithHover();
     bindUpdateSectionContent();
     cancelEntry();
 }
-function addSkill(addButton) {
+function bindButtonEventForSkillForm(addButton) {
     const form = popSkillForm();
     form.querySelector('#add-skill-entry').addEventListener('click', function() {
-        addSkillEntry(this, addButton);
+        addSkillCompFromForm(this, addButton);
     });
     form.querySelector('#cancel-skill-entry').addEventListener('click', function() {
         cancelEntry();
@@ -343,7 +351,7 @@ function parseEndDate(component) {
 
     return new Date("1 " + match[1]);  // "1 Jul 2024"
 }
-function addExpEntry(saveButton, addButton) {
+function addExpCompFromForm(saveButton, addButton) {
     const form = saveButton.parentElement;
     const company = form.querySelector("#company").value;
     const title = form.querySelector("#title").value;
@@ -380,6 +388,7 @@ function addExpEntry(saveButton, addButton) {
                     .map(line => `<li>${line}</li>`)
                     .join('\n')}
             </ul>
+            <i class="fa-regular fa-clipboard"></i>
             <i class="fa-solid fa-trash"></i>
         </div>`;
 
@@ -393,14 +402,14 @@ function addExpEntry(saveButton, addButton) {
     components.forEach(comp => list.appendChild(comp));
 
     addBulletToExp();
-    bindKeepAndDelete();
+    bindDeleteAndArchiveWithHover();
     bindUpdateSectionContent();
     cancelEntry();
 }
-function addExp(addButton) {
+function bindButtonEventForExpForm(addButton) {
     const form = popExpForm();
     form.querySelector('#add-exp-entry').addEventListener('click', function() {
-        addExpEntry(this, addButton);
+        addExpCompFromForm(this, addButton);
     });
     form.querySelector('#cancel-exp-entry').addEventListener('click', function() {
         cancelEntry();
@@ -454,19 +463,19 @@ function updateEduEntry(saveButton, ulBlock){
     const addButton = ulBlock.closest('section').querySelector('.add-button');
     const divBlock = ulBlock.parentElement;
     divBlock.remove();
-    addEduEntry(saveButton, addButton);
+    addEduCompFromForm(saveButton, addButton);
 }
 function updateSkillEntry(saveButton, ulBlock){
     const addButton = ulBlock.closest('section').querySelector('.add-button');
     const divBlock = ulBlock.parentElement;
     divBlock.remove();
-    addSkillEntry(saveButton, addButton);
+    addSkillCompFromForm(saveButton, addButton);
 }
 function updateExpEntry(saveButton, ulBlock){
     const addButton = ulBlock.closest('section').querySelector('.add-button');
     const divBlock = ulBlock.parentElement;
     divBlock.remove();
-    addExpEntry(saveButton, addButton);
+    addExpCompFromForm(saveButton, addButton);
 }
 
 function popSectionName(){
@@ -718,14 +727,14 @@ function saveAsJSON(data, filename = "resume.json") {
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
 }
-// restore from archived content
-function restoreEduFromJSON(sectionTitle, sectionObject){
+// restore edu-type section component from archived content
+function restoreEduFromJSON(sectionTitle, componentObject){
     const wrapper = document.createElement("div");
     wrapper.innerHTML = `
         <div class="component">
             <ul>
-                <li><strong>${sectionObject.university}</strong><span>${sectionObject.lastmonth}</span></li>
-                <li>${sectionObject.major}</li>
+                <li><strong>${componentObject.university}</strong><span>${componentObject.lastmonth}</span></li>
+                <li>${componentObject.major}</li>
             </ul>
             <i class="fa-regular fa-clipboard"></i>
             <i class="fa-solid fa-trash"></i>
@@ -737,6 +746,54 @@ function restoreEduFromJSON(sectionTitle, sectionObject){
             h2Element.nextElementSibling.appendChild(wrapper.firstElementChild);
         }
     });
+
+    bindDeleteAndArchiveWithHover();
+    bindUpdateSectionContent();
+}
+function restoreSkillFromJSON(sectionTitle, componentObject){
+    const wrapper = document.createElement("div");
+    wrapper.innerHTML = `
+        <div class="component">
+            <ul>
+                <li><strong>${componentObject.name}</strong>: <span>${componentObject.detail}</span></li>
+            </ul>
+            <i class="fa-solid fa-arrow-up"></i>
+            <i class="fa-regular fa-clipboard"></i>
+            <i class="fa-solid fa-trash"></i>
+        </div>`;
+
+    const preview = document.getElementById("resume-preview");
+    preview.querySelectorAll("h2").forEach(h2Element => {
+        if (h2Element.textContent.trim() === sectionTitle) {
+            h2Element.nextElementSibling.appendChild(wrapper.firstElementChild);
+        }
+    });
+
+    bindDeleteAndArchiveWithHover();
+    bindUpdateSectionContent();
+}
+function restoreExpFromJSON(sectionTitle, componentObject){
+    const wrapper = document.createElement("div");
+    wrapper.innerHTML = `
+        <div class="component">
+            <ul>
+                <li><strong>${componentObject.org}</strong></li>
+                <li><strong><em>${componentObject.loc}</em></strong></li>
+                ${componentObject.work.map(item => `<li>${item}</li>`).join("")}
+            </ul>
+            <i class="fa-regular fa-clipboard"></i>
+            <i class="fa-solid fa-trash"></i>
+        </div>`;
+
+    const preview = document.getElementById("resume-preview");
+    preview.querySelectorAll("h2").forEach(h2Element => {
+        if (h2Element.textContent.trim() === sectionTitle) {
+            h2Element.nextElementSibling.appendChild(wrapper.firstElementChild);
+        }
+    });
+
+    bindDeleteAndArchiveWithHover();
+    bindUpdateSectionContent();
 }
 // restore from resume.json
 function restoreResumeFromJSON(data) {
@@ -770,6 +827,7 @@ function restoreResumeFromJSON(data) {
                             <li><strong>${block.university}</strong><span>${block.lastmonth}</span></li>
                             <li>${block.major}</li>
                         </ul>
+                        <i class="fa-regular fa-clipboard"></i>
                         <i class="fa-solid fa-trash"></i>
                     </div>`;
 
@@ -795,6 +853,8 @@ function restoreResumeFromJSON(data) {
                         <ul>
                             <li><strong>${block.name}</strong>: <span>${block.detail}</span></li>
                         </ul>
+                        <i class="fa-solid fa-arrow-up"></i>
+                        <i class="fa-regular fa-clipboard"></i>
                         <i class="fa-solid fa-trash"></i>
                     </div>`;
 
@@ -822,6 +882,7 @@ function restoreResumeFromJSON(data) {
                                 <li><strong><em>${block.loc}</em></strong></li>
                                 ${block.work.map(item => `<li>${item}</li>`).join("")}
                             </ul>
+                            <i class="fa-regular fa-clipboard"></i>
                             <i class="fa-solid fa-trash"></i>
                         </div>`;
 

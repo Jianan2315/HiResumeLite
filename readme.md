@@ -8,14 +8,24 @@
 2) Double-click 'templateSelect.html'(unnecessary, but I keep it) or 'edit.html'.
 
 # Dev Track:
+## 11/04/2025
+1) Pending: Working on UI for 'Archive' and 'Retrieve'
+   1) Done: link archived content with the corresponding section by section name.
+   2) Done: add 3 functions for moving archived content back to preview container
+   3) Pending: function `bindArchiveComponent()` & `bindRetrieveComponent()`
+2) Plan: update resume.json structure and read/save functions accordingly
+3) bug fixed.
+4) update js code according to current html
+
 ## 11/03/2025
 1) Pending: Working on UI for 'Archive' and 'Retrieve' 
-   1) Pending: CSS adjustment since UI changed
+   1) Done: CSS adjustment since UI changed
    2) Pending: link archived content with the corresponding section by section name.
    3) Pending: add multiple functions for loading archived content
       - Draft function `restoreEduFromJSON` without binding
 2) Slightly modify code format
 3) Plan: update resume.json structure and read/save functions accordingly
+4) found a bug so I need fixing it first.
 
 ## 11/02/2025
 1) Working on UI for 'Archive' and 'Retrieve' & Pending CSS adjustment since UI changed
