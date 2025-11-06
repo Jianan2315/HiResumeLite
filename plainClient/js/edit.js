@@ -21,6 +21,7 @@ function bindFunctions(bindCopy=false) {
     bindUpdateSectionContent(); // Bind update function ---- allow click to update
     bindSectionFunction(bindCopy); // Bind move up/down, delete and clone function for each section
     addBulletToExp(); // Add bullets in exp-like section
+    bindRestoreComponent()
 }
 function cancelEntry() {
     const formContainer = document.getElementById("form-container");
@@ -97,12 +98,7 @@ function bindDeleteAndArchiveWithHover(){
         });
     }
 }
-function bindArchiveComponent(){
-    const previewContainer = document.getElementById("resume-preview");
-}
-function bindRetrieveComponent(){
-    const historyContainer = document.getElementById("archive-container")
-}
+
 function bindUpdateSectionContent() {
     for (let type of ["info", "edu", "skill", "exp"]){
         const section = document.querySelectorAll("."+type+"-section");
@@ -725,75 +721,88 @@ function saveAsJSON(data, filename = "resume.json") {
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
 }
+// bind archive and restore. I know this may make no sense :)
+function bindArchiveComponent(){
+    const previewContainer = document.getElementById("resume-preview");
+}
+function bindRestoreComponent(){
+    const archiveContainer = document.getElementById("archive-container");
+    archiveContainer.querySelector(".fa-square-minus").addEventListener("click", function(){
+        archiveContainer.classList.add("container-hidden");
+    });
+    const restore_icons = archiveContainer.querySelectorAll(".fa-arrow-rotate-left");
+    restore_icons.forEach(restore_icon=>{
+        restore_icon.addEventListener("click", function(){
+            const sectionTitle = restore_icon.closest("section").querySelector("h2").textContent.trim();
+            const componentJSON = JSON.parse(restore_icon.closest("div").querySelector("p").textContent.trim());
+            const preview = document.getElementById("resume-preview");
+            preview.querySelectorAll("h2").forEach(h2Element => {
+                if (h2Element.textContent.trim() === sectionTitle) {
+                    const type = h2Element.closest("section").dataset.type;
+                    const componentContainer = h2Element.nextElementSibling;
+                    if (["edu","skill","exp"].includes(type)) {
+                        let component = null;
+                        if (type === "edu"){component = restoreEduFromJSON(componentJSON);}
+                        else if (type === "skill"){component = restoreSkillFromJSON(componentJSON);}
+                        else if (type === "exp"){component = restoreExpFromJSON(componentJSON);}
+
+                        componentContainer.appendChild(component);
+                        bindDeleteAndArchiveWithHover();
+                        bindUpdateSectionContent();
+                        restore_icon.closest("div").remove();
+                    }
+                    else {console.error("Error: data-type does not exist.");}
+                } else {console.log(`Section ${sectionTitle} doesn't exist. This will be addressed if I do dev`);}
+            });
+        });
+    });
+}
 // restore edu-type section component from archived content
-function restoreEduFromJSON(sectionTitle, componentObject){
+function restoreEduFromJSON(componentJSON){
     const wrapper = document.createElement("div");
     wrapper.innerHTML = `
         <div class="component">
             <ul>
-                <li><strong>${componentObject.university}</strong><span>${componentObject.lastmonth}</span></li>
-                <li>${componentObject.major}</li>
+                <li><strong>${componentJSON.university}</strong><span>${componentJSON.lastmonth}</span></li>
+                <li>${componentJSON.major}</li>
             </ul>
             <i class="fa-regular fa-clipboard"></i>
             <i class="fa-solid fa-trash"></i>
         </div>`;
 
-    const preview = document.getElementById("resume-preview");
-    preview.querySelectorAll("h2").forEach(h2Element => {
-        if (h2Element.textContent.trim() === sectionTitle) {
-            h2Element.nextElementSibling.appendChild(wrapper.firstElementChild);
-        }
-    });
-
-    bindDeleteAndArchiveWithHover();
-    bindUpdateSectionContent();
+    return wrapper.firstElementChild
 }
-function restoreSkillFromJSON(sectionTitle, componentObject){
+function restoreSkillFromJSON(componentJSON){
     const wrapper = document.createElement("div");
     wrapper.innerHTML = `
         <div class="component">
             <ul>
-                <li><strong>${componentObject.name}</strong>: <span>${componentObject.detail}</span></li>
+                <li><strong>${componentJSON.name}</strong>: <span>${componentJSON.detail}</span></li>
             </ul>
             <i class="fa-solid fa-arrow-up"></i>
             <i class="fa-regular fa-clipboard"></i>
             <i class="fa-solid fa-trash"></i>
         </div>`;
 
-    const preview = document.getElementById("resume-preview");
-    preview.querySelectorAll("h2").forEach(h2Element => {
-        if (h2Element.textContent.trim() === sectionTitle) {
-            h2Element.nextElementSibling.appendChild(wrapper.firstElementChild);
-        }
-    });
-
-    bindDeleteAndArchiveWithHover();
-    bindUpdateSectionContent();
+    return wrapper.firstElementChild
 }
-function restoreExpFromJSON(sectionTitle, componentObject){
+function restoreExpFromJSON(componentJSON){
     const wrapper = document.createElement("div");
     wrapper.innerHTML = `
         <div class="component">
             <ul>
-                <li><strong>${componentObject.org}</strong></li>
-                <li><strong><em>${componentObject.loc}</em></strong></li>
-                ${componentObject.work.map(item => `<li>${item}</li>`).join("")}
+                <li><strong>${componentJSON.org}</strong></li>
+                <li><strong><em>${componentJSON.loc}</em></strong></li>
+                ${componentJSON.work.map(item => `<li>${item}</li>`).join("")}
             </ul>
             <i class="fa-regular fa-clipboard"></i>
             <i class="fa-solid fa-trash"></i>
         </div>`;
 
-    const preview = document.getElementById("resume-preview");
-    preview.querySelectorAll("h2").forEach(h2Element => {
-        if (h2Element.textContent.trim() === sectionTitle) {
-            h2Element.nextElementSibling.appendChild(wrapper.firstElementChild);
-        }
-    });
-
-    bindDeleteAndArchiveWithHover();
-    bindUpdateSectionContent();
+    return wrapper.firstElementChild
 }
-// restore from resume.json
+
+// retrieve all content from resume.json
 function restoreResumeFromJSON(data) {
     const info = data.info;
     document.querySelector(".info-section > div").innerHTML = `
@@ -913,9 +922,14 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     const icons = document.getElementById("head-icons")
+    const showArchive = icons.querySelector("#archive-icon");
     const importButton = icons.querySelector("#import-icon");
     const saveButton = icons.querySelector("#save-icon");
     const printButton = icons.querySelector("#print-icon");
+
+    showArchive.addEventListener("click", () => {
+        document.getElementById("archive-container").classList.toggle("container-hidden");
+    });
 
     saveButton.addEventListener("click", ()=>{
         const resumeData = extractResumeData();

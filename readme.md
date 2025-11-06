@@ -8,18 +8,24 @@
 2) Double-click 'templateSelect.html'(unnecessary, but I keep it) or 'edit.html'.
 
 # Dev Track:
-## 11/05/2025
+## 11/06/2025
 1) Pending: Working on 'Archive' and 'Retrieve'
-   1) Pending: function `bindArchiveComponent()` & `bindRetrieveComponent()`
-   2) update html and css for 'archive'
+   1) Pending: function `bindArchiveComponent()
 2) Plan: update resume.json structure and read/save functions accordingly
 
+## 11/05/2025
+1) Pending: Working on 'Archive' and 'Retrieve'
+   1) Pending: function `bindArchiveComponent()
+   2) update html and css for 'archive'
+   3) add a head icon to toggle archive-container visibility
+   4) Done: `bindRestoreComponent()`
+2) Plan: update resume.json structure and read/save functions accordingly
 
 ## 11/04/2025
 1) Pending: Working on UI for 'Archive' and 'Retrieve'
    1) Done: link archived content with the corresponding section by section name.
    2) Done: add 3 functions for moving archived content back to preview container
-   3) Pending: function `bindArchiveComponent()` & `bindRetrieveComponent()`
+   3) Pending: function `bindArchiveComponent()` & `bindRestoreComponent()`
 2) Plan: update resume.json structure and read/save functions accordingly
 3) bug fixed.
 4) update js code according to current html
