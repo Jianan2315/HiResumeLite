@@ -328,6 +328,7 @@ function addSkillCompFromForm(saveButton, addButton) {
 
     bindDeleteAndArchiveWithHover();
     bindUpdateSectionContent();
+    bindMoveForSkill();
     cancelEntry();
 }
 function bindButtonEventForSkillForm(addButton) {
@@ -942,6 +943,7 @@ document.addEventListener("DOMContentLoaded", function() {
         printElement.style.width = "100%";
         printElement.style.margin = "0";
         printElement.style.padding = "0";
+        printElement.style.borderWidth = "0";
 
         document.body.innerHTML = printElement.outerHTML; // outerHTML: string of DOM element object
         document.querySelectorAll(".add-button").forEach(button => {

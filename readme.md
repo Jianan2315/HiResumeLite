@@ -12,6 +12,7 @@
 1) Pending: Working on 'Archive' and 'Retrieve'
    1) Pending: function `bindArchiveComponent()
 2) Plan: update resume.json structure and read/save functions accordingly
+3) update move binding for skill section and fix print issue
 
 ## 11/05/2025
 1) Pending: Working on 'Archive' and 'Retrieve'
