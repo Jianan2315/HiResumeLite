@@ -1,12 +1,12 @@
 window.addEventListener("load", function () {
     if (sessionStorage.getItem("restore")){
-        console.log("Content exists.");
+        console.log("\"load\" event: Content exists.");
     }
 
     if (!sessionStorage.getItem("restore")){
         sessionStorage.removeItem("restore");
     } else {
-        console.log("Restore content.");
+        console.log("\"\"load\" event: Restore content.");
     }
 
     bindFunctions();
@@ -21,7 +21,8 @@ function bindFunctions(bindCopy=false) {
     bindUpdateSectionContent(); // Bind update function ---- allow click to update
     bindSectionFunction(bindCopy); // Bind move up/down, delete and clone function for each section
     addBulletToExp(); // Add bullets in exp-like section
-    bindRestoreComponent()
+    archiveComponent();
+    restoreComponent();
 }
 function cancelEntry() {
     const formContainer = document.getElementById("form-container");
@@ -72,7 +73,7 @@ function bindMoveForSkill(){
                 }
             });
         } else {
-            console.error('Error: Cannot access parent element of ', icon);
+            console.error('bindMoveForSkill() Error: Cannot access parent element of ', icon);
         }
     });
 }
@@ -93,7 +94,7 @@ function bindDeleteAndArchiveWithHover(){
                     icon.classList.remove('icon-visible');
                 });
             } else {
-                console.error('Error: Cannot access parent element of ', icon);
+                console.error('bindDeleteAndArchiveWithHover() Error: Cannot access parent element of ', icon);
             }
         });
     }
@@ -672,25 +673,25 @@ function extractResumeData() {
     const sections = preview.querySelectorAll("section:not([data-type=\"info\"])");
     sections.forEach(section => {
         const title = section.querySelector("h2 span").innerText.trim();
-        const type = section.dataset.type;
+        const sectionType = section.dataset.type;
         const listContainer = section.querySelector(":scope > div");
 
-        const sectionObject = {type:type};
+        const sectionObject = {type:sectionType};
         listContainer.querySelectorAll(".component").forEach((component, index) => {
-            if (type === "edu") {
+            if (sectionType === "edu") {
                 const liItems = component.querySelectorAll("li");
                 const block = {};
                 block.university = liItems[0].querySelector("strong").innerText.trim();
                 block.lastmonth = liItems[0].querySelector("span").innerText.trim();
                 block.major = liItems[1].innerText.trim();
                 sectionObject[index] = block;
-            } else if (type === "skill") {
+            } else if (sectionType === "skill") {
                 const liItem = component.querySelector("li");
                 const block = {};
                 block.name = liItem.querySelector("strong").innerText.trim();
                 block.detail = liItem.querySelector("span").innerText.trim();
                 sectionObject[index] = block;
-            } else if (type === "exp") {
+            } else if (sectionType === "exp") {
                 const liItems = component.querySelectorAll("li");
                 const block = {};
                 block.org = liItems[0].innerText.trim();
@@ -723,21 +724,101 @@ function saveAsJSON(data, filename = "resume.json") {
     URL.revokeObjectURL(url);
 }
 // bind archive and restore. I know this may make no sense :)
-function bindArchiveComponent(){
-    const previewContainer = document.getElementById("resume-preview");
+function saveComponentAsJSON(sectionType, liItems) {
+    const block = {};
+    if (sectionType === "edu") {
+        block.university = liItems[0].querySelector("strong").innerText.trim();
+        block.lastmonth = liItems[0].querySelector("span").innerText.trim();
+        block.major = liItems[1].innerText.trim();
+    } else if (sectionType === "skill") {
+        block.name = liItems.querySelector("strong").innerText.trim();
+        block.detail = liItems.querySelector("span").innerText.trim();
+    } else if (sectionType === "exp") {
+        block.org = liItems[0].innerText.trim();
+        block.loc = liItems[1].innerText.trim();
+        block.work = Array.from(liItems).slice(2).map(liItem=> liItem.innerText.trim());
+    } else {
+        console.error("saveComponentAsJSON(): Invalid type.");
+    }
+
+    return JSON.stringify(block, null, 2);
 }
-function bindRestoreComponent(){
+function bindArchiveFunctionality(archive_icon){
+    if (archive_icon === null){console.error("bindArchiveFunctionality(archive_icon) Error: archive_icon is null.");}
+    archive_icon.addEventListener("click", function() {
+        const previewSection = archive_icon.closest("section");
+        const sectionTitle = previewSection.querySelector("h2").textContent.trim();
+        const archiveContainer = document.getElementById("archive-container");
+        const liItems = archive_icon.previousElementSibling.querySelectorAll("li");
+        const sectionType = previewSection.dataset.type;
+        let match = false;
+        for (const section of archiveContainer.querySelectorAll("section")) {
+            if (section.querySelector("h2").textContent.trim()===sectionTitle) {
+                match = true;
+                const wrapper = document.createElement("div");
+                wrapper.innerHTML=`
+                <div>
+                    <h3>${new Date()}<i class="fa-solid fa-arrow-rotate-left"></i></h3>
+                    <p>${saveComponentAsJSON(sectionType,liItems)}</p>
+                </div>`;
+                const divBlock = wrapper.firstElementChild;
+                section.appendChild(wrapper.firstElementChild);
+
+                // duplicate code, may be replaced by event delegation
+                const restore_icon = divBlock.querySelector(".fa-arrow-rotate-left");
+                restore_icon.addEventListener("click", function(){
+                    const componentJSON = JSON.parse(restore_icon.closest("div").querySelector("p").textContent.trim());
+                    const componentContainer = previewSection.querySelector("div");
+                    if (["edu","skill","exp"].includes(sectionType)) {
+                        let component = null;
+                        if (sectionType === "edu"){component = restoreEduFromJSON(componentJSON);}
+                        else if (sectionType === "skill"){component = restoreSkillFromJSON(componentJSON);}
+                        else if (sectionType === "exp"){component = restoreExpFromJSON(componentJSON);}
+
+                        if (component === null){
+                            console.error("bindArchiveFunctionality(archive_icon) Error: RESTORE edu/skill/exp function return \"null\".");
+                            return;
+                        }
+                        componentContainer.appendChild(component);
+                        const new_archive_icon = component.querySelector(".fa-clipboard");
+                        bindDeleteAndArchiveWithHover();
+                        bindUpdateSectionContent();
+                        bindArchiveFunctionality(new_archive_icon);
+                        restore_icon.closest("div").remove();
+                    }
+                    else {console.error("bindArchiveFunctionality(archive_icon) Error: data-type does not exist.");}
+                });
+
+                archive_icon.closest("div").remove();
+                break;
+            }
+        }
+        if (match === false) {
+            console.log(`bindArchiveFunctionality(archive_icon): A new section title ${sectionTitle} should be added. This will come.`)
+        }
+    });
+}
+function archiveComponent(){
+    const previewContainer = document.getElementById("resume-preview");
+    const archive_icons = previewContainer.querySelectorAll(".fa-regular.fa-clipboard");
+    archive_icons.forEach(archive_icon => {
+        bindArchiveFunctionality(archive_icon);
+    });
+}
+function restoreComponent() {
     const archiveContainer = document.getElementById("archive-container");
-    archiveContainer.querySelector(".fa-square-minus").addEventListener("click", function(){
+    archiveContainer.querySelector(".fa-square-minus").addEventListener("click", function () {
         archiveContainer.classList.add("container-hidden");
     });
     const restore_icons = archiveContainer.querySelectorAll(".fa-arrow-rotate-left");
     restore_icons.forEach(restore_icon=>{
         restore_icon.addEventListener("click", function(){
-            const sectionTitle = restore_icon.closest("section").querySelector("h2").textContent.trim();
+            const archiveSection = restore_icon.closest("section");
+            const sectionTitle = archiveSection.querySelector("h2").textContent.trim();
             const componentJSON = JSON.parse(restore_icon.closest("div").querySelector("p").textContent.trim());
             const preview = document.getElementById("resume-preview");
-            preview.querySelectorAll("h2").forEach(h2Element => {
+
+            for (const h2Element of preview.querySelectorAll("h2")) {
                 if (h2Element.textContent.trim() === sectionTitle) {
                     const type = h2Element.closest("section").dataset.type;
                     const componentContainer = h2Element.nextElementSibling;
@@ -746,15 +827,21 @@ function bindRestoreComponent(){
                         if (type === "edu"){component = restoreEduFromJSON(componentJSON);}
                         else if (type === "skill"){component = restoreSkillFromJSON(componentJSON);}
                         else if (type === "exp"){component = restoreExpFromJSON(componentJSON);}
-
+                        if (component === null){
+                            console.error("restoreComponent() Error: RESTORE edu/skill/exp function return \"null\".");
+                            return;
+                        }
                         componentContainer.appendChild(component);
+                        const archive_icon = component.querySelector(".fa-clipboard");
+                        bindArchiveFunctionality(archive_icon);
                         bindDeleteAndArchiveWithHover();
                         bindUpdateSectionContent();
                         restore_icon.closest("div").remove();
+                        break;
                     }
-                    else {console.error("Error: data-type does not exist.");}
-                } else {console.log(`Section ${sectionTitle} doesn't exist. This will be addressed if I do dev`);}
-            });
+                    else {console.error("restoreComponent() Error: data-type does not exist.");}
+                } else {console.log(`restoreComponent(): Section ${sectionTitle} doesn't exist. This will be addressed if I do dev`);}
+            }
         });
     });
 }
@@ -909,7 +996,7 @@ function restoreResumeFromJSON(data) {
             section.querySelector("div").innerHTML = list.join("");
             preview.appendChild(section);
         } else {
-            console.error("extractResumeData(): Invalid type.");
+            console.error("restoreResumeFromJSON(data) Error: Invalid type.");
         }
     }
 
@@ -968,7 +1055,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 restoreResumeFromJSON(jsonData);
             } catch (err) {
                 alert("Invalid JSON file.");
-                console.error(err);
+                console.error("DOMContentLoaded JSON Input Error:\n",err);
             }
         };
 

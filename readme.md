@@ -8,25 +8,41 @@
 2) Double-click 'templateSelect.html'(unnecessary, but I keep it) or 'edit.html'.
 
 # Dev Track:
+## 11/08/2025
+1) Plan: update resume.json structure and read/save functions accordingly 
+2) Pending: Working on 'Archive' and 'Retrieve' -- currently `archiveComponent()` & `restoreComponent()`
+   1) Pending: add 2nd click-event listener to both functions
+      - Done: "edu" type section pass
+      - Pending: "skill" and "exp"
+   2) Pending: allow archive/restore component to non-exist section.
+   3) Pending: rewrite via event delegation
+
+## 11/07/2025
+1) Pending: Working on 'Archive' and 'Retrieve'
+   1) Draft done: function `archiveComponent()`
+   2) Pending: complement functionalities of both functions `archiveComponent()` & `restoreComponent()`
+   3) Pending: rewrite `archiveComponent()` & `restoreComponent()` via event delegation
+2) Plan: update resume.json structure and read/save functions accordingly
+
 ## 11/06/2025
 1) Pending: Working on 'Archive' and 'Retrieve'
-   1) Pending: function `bindArchiveComponent()
+   1) Pending: function `archiveComponent()
 2) Plan: update resume.json structure and read/save functions accordingly
 3) update move binding for skill section and fix print issue
 
 ## 11/05/2025
 1) Pending: Working on 'Archive' and 'Retrieve'
-   1) Pending: function `bindArchiveComponent()
+   1) Pending: function `archiveComponent()
    2) update html and css for 'archive'
    3) add a head icon to toggle archive-container visibility
-   4) Done: `bindRestoreComponent()`
+   4) Draft done: `restoreComponent()`
 2) Plan: update resume.json structure and read/save functions accordingly
 
 ## 11/04/2025
 1) Pending: Working on UI for 'Archive' and 'Retrieve'
    1) Done: link archived content with the corresponding section by section name.
    2) Done: add 3 functions for moving archived content back to preview container
-   3) Pending: function `bindArchiveComponent()` & `bindRestoreComponent()`
+   3) Pending: function `archiveComponent()` & `restoreComponent()`
 2) Plan: update resume.json structure and read/save functions accordingly
 3) bug fixed.
 4) update js code according to current html
