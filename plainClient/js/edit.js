@@ -15,13 +15,12 @@ window.addEventListener("load", function () {
 function bindFunctions(bindCopy=false) {
     // bind all functionalities when initialize
     // also, bind all functionalities for a new added section
-    bindDeleteAndArchiveWithHover(); // Bind trash icon with delete function
+    bindDeleteAndArchiveWithHover(); // Bind trash icon with delete function; Never use this with bindArchive() parallelly.
     bindMoveForSkill(); // Only for changing 'skill' items order
     bindAddNewComponent(); // Bind all add buttons with add function to allow adding a new component to each section
     bindUpdateSectionContent(); // Bind update function ---- allow click to update
     bindSectionFunction(bindCopy); // Bind move up/down, delete and clone function for each section
     addBulletToExp(); // Add bullets in exp-like section
-    archiveComponent();
     restoreComponent();
 }
 function cancelEntry() {
@@ -77,26 +76,47 @@ function bindMoveForSkill(){
         }
     });
 }
-function bindDeleteAndArchiveWithHover(){
-    for (let selectors of [".fa-solid.fa-trash", ".fa-regular.fa-clipboard"]){
-        document.querySelectorAll(selectors).forEach((icon)=>{
-            const block = icon.parentElement;
-            if (block) {
-                icon.addEventListener("click", function(e) {
-                    e.stopPropagation(); // not necessary but in case
-                    if (selectors === ".fa-solid.fa-trash") deleteItem(this);
-                    // TO DO: archive
-                });
-                block.addEventListener('mouseenter', () => {
-                    icon.classList.add('icon-visible');
-                });
-                block.addEventListener('mouseleave', () => {
-                    icon.classList.remove('icon-visible');
-                });
-            } else {
-                console.error('bindDeleteAndArchiveWithHover() Error: Cannot access parent element of ', icon);
-            }
-        });
+function bindDeleteAndArchiveWithHover(archive_icon=null){
+    if (archive_icon){
+        const block = archive_icon.parentElement;
+        if (block) {
+            const delete_icon = block.querySelector(".fa-solid.fa-trash");
+            delete_icon.addEventListener("click", function(e){
+                deleteItem(this);
+            });
+            bindArchive(archive_icon);
+            block.addEventListener('mouseenter', () => {
+                archive_icon.classList.add('icon-visible');
+                delete_icon.classList.add('icon-visible');
+            });
+            block.addEventListener('mouseleave', () => {
+                archive_icon.classList.remove('icon-visible');
+                delete_icon.classList.remove('icon-visible');
+            });
+        } else {
+            console.error('bindDeleteAndArchiveWithHover() Error: Cannot access parent element of not-null archive_icon ', archive_icon);
+        }
+    } else {
+        for (let selectors of [".fa-solid.fa-trash", ".fa-regular.fa-clipboard"]){
+            document.querySelectorAll(selectors).forEach((icon)=>{
+                const block = icon.parentElement;
+                if (block) {
+                    icon.addEventListener("click", function(e) {
+                        e.stopPropagation(); // not necessary but in case
+                        if (selectors === ".fa-solid.fa-trash") deleteItem(this);
+                        if (selectors === ".fa-regular.fa-clipboard") bindArchive(this);
+                    });
+                    block.addEventListener('mouseenter', () => {
+                        icon.classList.add('icon-visible');
+                    });
+                    block.addEventListener('mouseleave', () => {
+                        icon.classList.remove('icon-visible');
+                    });
+                } else {
+                    console.error('bindDeleteAndArchiveWithHover() Error: Cannot access parent element of ', icon);
+                }
+            });
+        }
     }
 }
 
@@ -743,8 +763,8 @@ function saveComponentAsJSON(sectionType, liItems) {
 
     return JSON.stringify(block, null, 2);
 }
-function bindArchiveFunctionality(archive_icon){
-    if (archive_icon === null){console.error("bindArchiveFunctionality(archive_icon) Error: archive_icon is null.");}
+function bindArchive(archive_icon){
+    if (archive_icon === null){console.error("bindArchive(archive_icon) Error: archive_icon is null.");}
     archive_icon.addEventListener("click", function() {
         const previewSection = archive_icon.closest("section");
         const sectionTitle = previewSection.querySelector("h2").textContent.trim();
@@ -776,17 +796,16 @@ function bindArchiveFunctionality(archive_icon){
                         else if (sectionType === "exp"){component = restoreExpFromJSON(componentJSON);}
 
                         if (component === null){
-                            console.error("bindArchiveFunctionality(archive_icon) Error: RESTORE edu/skill/exp function return \"null\".");
+                            console.error("bindArchive(archive_icon) Error: RESTORE edu/skill/exp function return \"null\".");
                             return;
                         }
                         componentContainer.appendChild(component);
                         const new_archive_icon = component.querySelector(".fa-clipboard");
-                        bindDeleteAndArchiveWithHover();
+                        bindDeleteAndArchiveWithHover(new_archive_icon);
                         bindUpdateSectionContent();
-                        bindArchiveFunctionality(new_archive_icon);
                         restore_icon.closest("div").remove();
                     }
-                    else {console.error("bindArchiveFunctionality(archive_icon) Error: data-type does not exist.");}
+                    else {console.error("bindArchive(archive_icon) Error: data-type does not exist.");}
                 });
 
                 archive_icon.closest("div").remove();
@@ -794,17 +813,11 @@ function bindArchiveFunctionality(archive_icon){
             }
         }
         if (match === false) {
-            console.log(`bindArchiveFunctionality(archive_icon): A new section title ${sectionTitle} should be added. This will come.`)
+            console.log(`bindArchive(archive_icon): A new section title ${sectionTitle} should be added. This will come.`)
         }
     });
 }
-function archiveComponent(){
-    const previewContainer = document.getElementById("resume-preview");
-    const archive_icons = previewContainer.querySelectorAll(".fa-regular.fa-clipboard");
-    archive_icons.forEach(archive_icon => {
-        bindArchiveFunctionality(archive_icon);
-    });
-}
+
 function restoreComponent() {
     const archiveContainer = document.getElementById("archive-container");
     archiveContainer.querySelector(".fa-square-minus").addEventListener("click", function () {
@@ -833,8 +846,7 @@ function restoreComponent() {
                         }
                         componentContainer.appendChild(component);
                         const archive_icon = component.querySelector(".fa-clipboard");
-                        bindArchiveFunctionality(archive_icon);
-                        bindDeleteAndArchiveWithHover();
+                        bindDeleteAndArchiveWithHover(archive_icon);
                         bindUpdateSectionContent();
                         restore_icon.closest("div").remove();
                         break;

@@ -8,6 +8,14 @@
 2) Double-click 'templateSelect.html'(unnecessary, but I keep it) or 'edit.html'.
 
 # Dev Track:
+## 11/13/2025
+1) Plan: update resume.json structure and read/save functions accordingly
+2) ~~Pending: Working on 'Archive' and 'Retrieve' -- currently `archiveComponent()` & `restoreComponent()`~~
+   1) ~~Pending: add 2nd click-event listener to both functions~~
+      - ~~Pending: "skill" and "exp"~~
+   2) ~~Pending: allow archive/restore component to non-exist section.~~
+3) After doing some updates, I just realize that I have to rewrite code via event delegation, otherwise there would be endless manual binding work.
+   
 ## 11/08/2025
 1) Plan: update resume.json structure and read/save functions accordingly 
 2) Pending: Working on 'Archive' and 'Retrieve' -- currently `archiveComponent()` & `restoreComponent()`
